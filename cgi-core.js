@@ -83,6 +83,9 @@ export function createHandler (config=defaultConfig) {
       res.writeHead(200, headers);
       res.end(bodyContent);
     });
+    if(child.stdin) {
+      req.pipe(child.stdin);
+    }
 
     return true;
   }
