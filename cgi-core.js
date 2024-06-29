@@ -49,7 +49,7 @@ export function createHandler (config=defaultConfig) {
 
     const filePath = getUrlFilePath(req.url, config.urlPath);
     if(!filePath) {
-      return;
+      return false;
     }
     const fullFilePath = resolve(config.filePath, filePath);
     const execPath = getExecPath(filePath, config.extensions);
@@ -62,7 +62,7 @@ export function createHandler (config=defaultConfig) {
     } catch(err) {
       res.writeHead(404, {'Content-type': 'text/plain'});
       res.end(STATUS_CODES[404]);
-      return;
+      return true;
     }
 
     const child = exec(fullExecPath, { env }, async (error, stdout, stderr) => {
@@ -83,5 +83,7 @@ export function createHandler (config=defaultConfig) {
       res.writeHead(200, headers);
       res.end(bodyContent);
     });
+
+    return true;
   }
 }

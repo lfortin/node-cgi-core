@@ -1,6 +1,6 @@
 # cgi-core
 
-A thin wrapper for supporting CGI script in Node.js.
+A thin wrapper for supporting CGI scripts in Node.js.
 
 > :construction: This is a work in progress. :construction:
 
@@ -30,7 +30,11 @@ const handler = createHandler({
   debugOutput: false
 });
 
-const app = createServer(handler);
+const app = createServer(async (req, res) => {
+  if(!await handler(req, res)) {
+    // here, handle any routing outside of urlPath==='/cgi-bin'
+  }
+});
 app.listen(3000);
 
 ```

@@ -32,7 +32,13 @@ const callback = createHandler({
   debugOutput: true
 });
 
-const app = createServer( callback );
+const app = createServer(async (req, res) => {
+  if(!await callback(req, res)) {
+    // here, handle any routing outside of urlPath
+    res.writeHead(200, {'Content-type': 'text/html'});
+    res.end('<html><body>outside of url path /cgi-bin</body></html>');
+  }
+});
 app.listen(3001);
 
 console.log('go to http://127.0.0.1:3001/cgi-bin/env.js ;)');
