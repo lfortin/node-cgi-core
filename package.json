@@ -1,7 +1,6 @@
 {
   "name": "cgi-core",
   "description": "thin wrapper for CGI scripts (work in progress)",
-  "private": true,
   "version": "0.0.1",
   "author": {
     "name": "Laurent Fortin",
