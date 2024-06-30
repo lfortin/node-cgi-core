@@ -1,7 +1,12 @@
 {
   "name": "cgi-core",
   "description": "thin wrapper for CGI scripts (work in progress)",
-  "version": "0.0.3",
+  "version": "0.0.4",
+  "homepage": "https://github.com/lfortin/node-cgi-core#readme",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lfortin/node-cgi-core.git"
+  },
   "author": {
     "name": "Laurent Fortin",
     "email": "laurent.fortin@gmail.com"
