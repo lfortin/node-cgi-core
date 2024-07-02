@@ -27,6 +27,7 @@ const callback = createHandler({
   filePath: './cgi-bin',
   extensions: {
     "/usr/bin/perl -w": ["pl", "cgi"],
+    "/usr/bin/python": ["py"],
     "/usr/local/bin/node": ["js", "node"]
   },
   debugOutput: true

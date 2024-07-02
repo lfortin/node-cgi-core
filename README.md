@@ -25,6 +25,7 @@ const handler = createHandler({
   filePath: process.cwd(),
   extensions: {
     "/usr/bin/perl": ["pl", "cgi"],
+    "/usr/bin/python": ["py"],
     "/usr/local/bin/node": ["js", "node"]
   },
   debugOutput: false

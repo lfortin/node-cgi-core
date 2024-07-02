@@ -35,6 +35,7 @@ import {
 
 export const defaultExtensions = {
   "/usr/bin/perl": ["pl", "cgi"],
+  "/usr/bin/python": ["py"],
   "/usr/local/bin/node": ["js", "node"]
 };
 export const defaultConfig = {
