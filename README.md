@@ -33,7 +33,9 @@ const handler = createHandler({
 
 const app = createServer(async (req, res) => {
   if(!await handler(req, res)) {
-    // here, handle any routing outside of urlPath==='/cgi-bin'
+    // here, handle any routing outside of urlPath === '/cgi-bin'
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('outside of urlPath');
   }
 });
 app.listen(3000);
