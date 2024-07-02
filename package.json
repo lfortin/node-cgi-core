@@ -16,14 +16,13 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "dependencies": {
-  },
   "devDependencies": {
+    "mocha": "^10.5.2"
   },
   "scripts": {
     "prepublishOnly": "npm test",
     "start": "node server.js",
-    "test": "node -p \"'TODO: tests'\""
+    "test": "mocha test/**/*.js"
   },
   "keywords": [
     "cgi"
