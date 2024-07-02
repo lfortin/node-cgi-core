@@ -49,7 +49,7 @@ describe('cgi-core', () => {
       const req = {
         url: '/cgi-bin/script.cgi?param1=test&param2=test',
         headers: {
-          'Content-type': 'application/json',
+          'Content-Type': 'application/json',
           'Cookie': 'yummy_cookie=choco; tasty_cookie=strawberry',
           'Host': 'www.example.org'
         },
@@ -65,7 +65,7 @@ describe('cgi-core', () => {
   });
   describe('parseResponse', () => {
     it('should return a parsed response', async () => {
-      const output = `Content-type: text/html\nSet-Cookie: yummy_cookie=choco
+      const output = `Content-Type: text/html\nSet-Cookie: yummy_cookie=choco
 
       <html>
       <body>
@@ -75,10 +75,9 @@ describe('cgi-core', () => {
       `;
 
       const { headers, bodyContent } = await parseResponse(output);
-      assert.strictEqual(headers['Content-type'], 'text/html');
+      assert.strictEqual(headers['Content-Type'], 'text/html');
       assert.strictEqual(headers['Set-Cookie'], 'yummy_cookie=choco');
       assert.ok(bodyContent.match(/hello world/));
     });
   });
 });
-

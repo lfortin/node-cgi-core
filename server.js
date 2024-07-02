@@ -36,7 +36,7 @@ const callback = createHandler({
 const app = createServer(async (req, res) => {
   if(!await callback(req, res)) {
     // here, handle any routing outside of urlPath
-    res.writeHead(200, {'Content-type': 'text/html'});
+    res.writeHead(200, {'Content-Type': 'text/html'});
     res.end('<html><body>outside of url path /cgi-bin</body></html>');
   }
 });

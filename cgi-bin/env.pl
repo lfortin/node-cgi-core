@@ -21,8 +21,9 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-print "Content-type: text/html\n\n";
+print "Content-Type: text/html\n\n";
 
+print "<!doctype html>\n";
 print "<html>\n";
 print "
 <style>

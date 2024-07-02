@@ -19,23 +19,21 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { EOL } from "node:os";
+process.stdout.write(`Content-Type: text/html\n\n`);
 
-process.stdout.write(`Content-Type: text/html${EOL}`);
-process.stdout.write(EOL);
-
-process.stdout.write(`<html>`);
+process.stdout.write('<!doctype html>\n');
+process.stdout.write('<html>\n');
 process.stdout.write(`
 <style>
 
 </style>
 `);
 
-process.stdout.write('<body>');
+process.stdout.write('<body>\n');
 
 for(const i in process.env) {
-  process.stdout.write(`${i}: ${process.env[i]}<br/>${EOL}`);
+  process.stdout.write(`${i}: ${process.env[i]}<br/>\n`);
 }
 
-process.stdout.write('</body>');
-process.stdout.write(`</html>`);
+process.stdout.write('</body>\n');
+process.stdout.write('</html>\n');

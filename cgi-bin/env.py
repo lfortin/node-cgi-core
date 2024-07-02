@@ -25,7 +25,7 @@ import cgi
 import os
 
 def print_env_vars():
-  print("Content-type: text/plain\n")
+  print("Content-Type: text/plain\n")
   print(os.environ)
 
 if __name__ == "__main__":

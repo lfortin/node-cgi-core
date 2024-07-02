@@ -61,7 +61,7 @@ export function createHandler (config=defaultConfig) {
     try {
       await access(fullFilePath, constants.F_OK);
     } catch(err) {
-      res.writeHead(404, {'Content-type': 'text/plain'});
+      res.writeHead(404, {'Content-Type': 'text/plain'});
       res.end(STATUS_CODES[404]);
       return true;
     }
@@ -69,7 +69,7 @@ export function createHandler (config=defaultConfig) {
     const child = exec(fullExecPath, { env }, async (error, stdout, stderr) => {
       if (error) {
         const statusCode = error.code === 'ENOENT' ? 404 : 500;
-        res.writeHead(statusCode, {'Content-type': 'text/plain'});
+        res.writeHead(statusCode, {'Content-Type': 'text/plain'});
         if(config.debugOutput) {
           res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
           res.end(stderr);
