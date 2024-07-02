@@ -25,7 +25,8 @@
     "test": "mocha test/**/*.js"
   },
   "keywords": [
-    "cgi"
+    "cgi",
+    "http"
   ],
   "license": "MIT"
 }
