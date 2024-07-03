@@ -85,6 +85,8 @@ export function createHandler (config=defaultConfig) {
       res.end(bodyContent);
     });
     if(child.stdin) {
+      // this just prevents exiting main node process and exits child process instead
+      child.stdin.on('error', () => {});
       req.pipe(child.stdin);
     }
 
