@@ -23,20 +23,19 @@ process.stdout.write('Content-Type: text/html\n\n');
 
 process.stdout.write('<!doctype html>\n');
 process.stdout.write('<html>\n');
-process.stdout.write(`
-<style>
-
-</style>
-`);
 
 process.stdout.write('<body>\n');
 
-for(const i in process.env) {
-  process.stdout.write(`${i}: ${process.env[i]}<br/>\n`);
-}
-
-process.stdout.write('</br/></br/>\n');
-process.stdin.pipe(process.stdout);
+process.stdout.write(`
+action="/cgi-bin/env.js" method="POST"<br /><br />
+<form action="/cgi-bin/env.js" method="POST">
+input1 <input name="input1" size="30" maxlength="100" /><br /><br />
+input2 <input name="input2" size="30" maxlength="100" /><br /><br />
+textarea1 <textarea name="textarea1" width="30" height="5" maxlength="100"></textarea><br /><br />
+<input type="submit" value="send request" />
+</form>
+`);
 
 process.stdout.write('</body>\n');
+
 process.stdout.write('</html>\n');
