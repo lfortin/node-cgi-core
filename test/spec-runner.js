@@ -23,6 +23,11 @@ describe('cgi-core', () => {
       const path = sanitizePath('./../../cgi-bin/');
       assert.strictEqual(path, './//cgi-bin/');
     });
+    it('should remove CRLF from the path', async () => {
+      const path = sanitizePath(`/cgi-bin/
+script.cgi`);
+      assert.strictEqual(path, '/cgi-bin/script.cgi');
+    });
   });
   describe('getExecPath', () => {
     it('should return an execPath', async () => {
