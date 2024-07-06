@@ -42,7 +42,8 @@ export const defaultConfig = {
   urlPath: "/cgi-bin",
   filePath: process.cwd(),
   extensions: defaultExtensions,
-  debugOutput: false
+  debugOutput: false,
+  maxRequestPayload: 1024**2
 };
 
 export function createHandler (config=defaultConfig) {
@@ -68,6 +69,9 @@ export function createHandler (config=defaultConfig) {
 
     const child = exec(fullExecPath, { env }, async (error, stdout, stderr) => {
       if (error) {
+        if(res.headersSent) {
+          return;
+        }
         const statusCode = error.code === 'ENOENT' ? 404 : 500;
         res.writeHead(statusCode, {'Content-Type': 'text/plain'});
         if(config.debugOutput) {
@@ -87,7 +91,24 @@ export function createHandler (config=defaultConfig) {
     if(child.stdin) {
       // this just prevents exiting main node process and exits child process instead
       child.stdin.on('error', () => {});
-      req.pipe(child.stdin);
+      //req.pipe(child.stdin);
+
+      let dataLength = 0;
+      req.on('data', chunk => {
+        dataLength += chunk.length;
+        // Check if the data size exceeds the limit
+        if (dataLength > config.maxRequestPayload) {
+          res.writeHead(413, { 'Content-Type': 'text/plain' });
+          res.end(STATUS_CODES[413]);
+          req.connection.destroy(); // Terminate the request
+          child.kill();
+          return;
+        }
+        child.stdin.write(chunk);
+      });
+      req.on('end', () => {
+        child.stdin.end('');
+      });
     }
 
     return true;
