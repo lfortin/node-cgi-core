@@ -56,7 +56,7 @@ export function createHandler (config=defaultConfig) {
     if(parseInt(req.headers['content-length']) > config.maxRequestPayload) {
       res.writeHead(413, { 'Content-Type': 'text/plain' });
       res.end(STATUS_CODES[413]);
-      req.connection.destroy(); // Terminate the request
+      req.destroy(); // Terminate the request
       return true;
     }
     const fullFilePath = resolve(config.filePath, filePath);
@@ -73,7 +73,7 @@ export function createHandler (config=defaultConfig) {
       return true;
     }
 
-    const child = exec(fullExecPath, { env }, async (error, stdout, stderr) => {
+    const child = exec(fullExecPath, { env, maxBuffer: config.maxRequestPayload }, async (error, stdout, stderr) => {
       if (error) {
         if(res.headersSent) {
           return;
@@ -106,7 +106,7 @@ export function createHandler (config=defaultConfig) {
         if (dataLength > config.maxRequestPayload) {
           res.writeHead(413, { 'Content-Type': 'text/plain' });
           res.end(STATUS_CODES[413]);
-          req.connection.destroy(); // Terminate the request
+          req.destroy(); // Terminate the request
           child.kill();
           return;
         }
