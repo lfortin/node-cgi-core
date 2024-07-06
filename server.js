@@ -30,7 +30,8 @@ const callback = createHandler({
     "/usr/bin/python": ["py"],
     "/usr/local/bin/node": ["js", "node"]
   },
-  debugOutput: true
+  debugOutput: true,
+  maxRequestPayload: 1024**2
 });
 
 const app = createServer(async (req, res) => {

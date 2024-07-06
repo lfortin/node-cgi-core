@@ -53,6 +53,12 @@ export function createHandler (config=defaultConfig) {
     if(!filePath) {
       return false;
     }
+    if(parseInt(req.headers['content-length']) > config.maxRequestPayload) {
+      res.writeHead(413, { 'Content-Type': 'text/plain' });
+      res.end(STATUS_CODES[413]);
+      req.connection.destroy(); // Terminate the request
+      return true;
+    }
     const fullFilePath = resolve(config.filePath, filePath);
     const execPath = getExecPath(filePath, config.extensions);
     const fullExecPath = `${execPath ? execPath + ' ' : ''}${fullFilePath}`;
