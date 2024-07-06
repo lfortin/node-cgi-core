@@ -55,7 +55,7 @@ export function createHandler (config=defaultConfig) {
     const fullFilePath = resolve(config.filePath, filePath);
     const execPath = getExecPath(filePath, config.extensions);
     const fullExecPath = `${execPath ? execPath + ' ' : ''}${fullFilePath}`;
-    const env = createEnvObject(req);
+    const env = createEnvObject(req, {filePath, fullFilePath});
 
     // Check if the file exists
     try {

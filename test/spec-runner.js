@@ -58,14 +58,25 @@ script.cgi`);
           'Cookie': 'yummy_cookie=choco; tasty_cookie=strawberry',
           'Host': 'www.example.org'
         },
-        method: 'GET'
+        method: 'GET',
+        httpVersion: '1.1'
       };
-      const env = createEnvObject(req);
+      const extraInfo = {
+        filePath: 'files/script.cgi',
+        fullFilePath: '/home/username/cgi-bin/files/script.cgi'
+      };
+      const env = createEnvObject(req, extraInfo);
       assert.strictEqual(env.HTTP_CONTENT_TYPE, 'application/json');
       assert.strictEqual(env.HTTP_COOKIE, 'yummy_cookie=choco; tasty_cookie=strawberry');
       assert.strictEqual(env.HTTP_HOST, 'www.example.org');
       assert.strictEqual(env.QUERY_STRING, 'param1=test&param2=test');
       assert.strictEqual(env.REQUEST_METHOD, 'GET');
+      assert.strictEqual(env.PATH, process.env.PATH);
+      assert.strictEqual(env.REQUEST_URI, '/cgi-bin/script.cgi?param1=test&param2=test');
+      assert.strictEqual(env.SERVER_PROTOCOL, 'HTTP/1.1');
+      assert.strictEqual(env.SERVER_SOFTWARE, `Node.js/${process.version}`);
+      assert.strictEqual(env.SCRIPT_FILENAME, '/home/username/cgi-bin/files/script.cgi');
+      assert.strictEqual(env.SCRIPT_NAME, '/files/script.cgi');
     });
   });
   describe('parseResponse', () => {
