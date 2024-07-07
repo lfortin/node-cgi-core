@@ -48,8 +48,6 @@ export const defaultConfig = {
 
 export function createHandler (config=defaultConfig) {
   return async function(req, res) {
-    req.pause();
-
     const filePath = getUrlFilePath(req.url, config.urlPath);
     if(filePath === null) {
       return false;
@@ -112,29 +110,7 @@ export function createHandler (config=defaultConfig) {
     if(child.stdin) {
       // this just prevents exiting main node process and exits child process instead
       child.stdin.on('error', () => {});
-      //req.pipe(child.stdin);
-
-      let dataLength = 0;
-      const handleRequestPayload = function() {
-        let chunk;
-        while (null !== (chunk = req.read(10000))) {
-          dataLength += chunk.length;
-          // Check if the data size exceeds the limit
-          if (dataLength > config.maxBuffer) {
-            res.writeHead(413, { 'Content-Type': 'text/plain' });
-            res.end(STATUS_CODES[413]);
-            req.destroy(); // Terminate the request
-            child.kill();
-            return;
-          }
-          child.stdin.write(chunk);
-        }
-      }
-      handleRequestPayload();
-      req.on('readable', handleRequestPayload);
-      req.on('end', () => {
-        child.stdin.end('');
-      });
+      req.pipe(child.stdin);
     }
 
     return true;
