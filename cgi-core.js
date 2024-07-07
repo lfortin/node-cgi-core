@@ -43,17 +43,18 @@ export const defaultConfig = {
   filePath: process.cwd(),
   extensions: defaultExtensions,
   debugOutput: false,
-  maxRequestPayload: 1024**2
+  maxBuffer: 2 * 1024**2
 };
 
 export function createHandler (config=defaultConfig) {
   return async function(req, res) {
+    req.pause();
 
     const filePath = getUrlFilePath(req.url, config.urlPath);
-    if(!filePath) {
+    if(filePath === null) {
       return false;
     }
-    if(parseInt(req.headers['content-length']) > config.maxRequestPayload) {
+    if(parseInt(req.headers['content-length']) > config.maxBuffer) {
       res.writeHead(413, { 'Content-Type': 'text/plain' });
       res.end(STATUS_CODES[413]);
       req.destroy(); // Terminate the request
@@ -66,6 +67,9 @@ export function createHandler (config=defaultConfig) {
 
     // Check if the file exists
     try {
+      if(!filePath) {
+        throw 'no filePath';
+      }
       await access(fullFilePath, constants.F_OK);
     } catch(err) {
       res.writeHead(404, {'Content-Type': 'text/plain'});
@@ -73,12 +77,23 @@ export function createHandler (config=defaultConfig) {
       return true;
     }
 
-    const child = exec(fullExecPath, { env, maxBuffer: config.maxRequestPayload }, async (error, stdout, stderr) => {
+    // TODO: use spawn for a better handling of child.stdin, child.stdout
+    const child = exec(fullExecPath, { env, maxBuffer: config.maxBuffer }, async (error, stdout, stderr) => {
       if (error) {
         if(res.headersSent) {
           return;
         }
-        const statusCode = error.code === 'ENOENT' ? 404 : 500;
+        let statusCode;
+        switch (error.code) {
+          case 'ENOENT':
+            statusCode = 404;
+            break;
+          case 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER':
+            statusCode = 413;
+            break;
+          default:
+            statusCode = 500;
+        }
         res.writeHead(statusCode, {'Content-Type': 'text/plain'});
         if(config.debugOutput) {
           res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
@@ -100,18 +115,23 @@ export function createHandler (config=defaultConfig) {
       //req.pipe(child.stdin);
 
       let dataLength = 0;
-      req.on('data', chunk => {
-        dataLength += chunk.length;
-        // Check if the data size exceeds the limit
-        if (dataLength > config.maxRequestPayload) {
-          res.writeHead(413, { 'Content-Type': 'text/plain' });
-          res.end(STATUS_CODES[413]);
-          req.destroy(); // Terminate the request
-          child.kill();
-          return;
+      const handleRequestPayload = function() {
+        let chunk;
+        while (null !== (chunk = req.read(10000))) {
+          dataLength += chunk.length;
+          // Check if the data size exceeds the limit
+          if (dataLength > config.maxBuffer) {
+            res.writeHead(413, { 'Content-Type': 'text/plain' });
+            res.end(STATUS_CODES[413]);
+            req.destroy(); // Terminate the request
+            child.kill();
+            return;
+          }
+          child.stdin.write(chunk);
         }
-        child.stdin.write(chunk);
-      });
+      }
+      handleRequestPayload();
+      req.on('readable', handleRequestPayload);
       req.on('end', () => {
         child.stdin.end('');
       });
