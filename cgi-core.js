@@ -52,6 +52,7 @@ export function createHandler (config=defaultConfig) {
     if(filePath === null) {
       return false;
     }
+    req.pause();
     if(parseInt(req.headers['content-length']) > config.maxBuffer) {
       res.writeHead(413, { 'Content-Type': 'text/plain' });
       res.end(STATUS_CODES[413]);
@@ -72,6 +73,7 @@ export function createHandler (config=defaultConfig) {
     } catch(err) {
       res.writeHead(404, {'Content-Type': 'text/plain'});
       res.end(STATUS_CODES[404]);
+      req.destroy(); // Terminate the request
       return true;
     }
 
@@ -99,6 +101,7 @@ export function createHandler (config=defaultConfig) {
         } else {
           res.end(STATUS_CODES[statusCode]);
         }
+        req.destroy(); // Terminate the request
         return;
       }
       
@@ -110,7 +113,19 @@ export function createHandler (config=defaultConfig) {
     if(child.stdin) {
       // this just prevents exiting main node process and exits child process instead
       child.stdin.on('error', () => {});
-      req.pipe(child.stdin);
+      //req.pipe(child.stdin);
+
+      const handleRequestPayload = function() {
+        let chunk;
+        while (null !== (chunk = req.read(10240))) {
+          child.stdin.write(chunk);
+        }
+      }
+      handleRequestPayload();
+      req.on('readable', handleRequestPayload);
+      req.on('end', () => {
+        child.stdin.end('');
+      });
     }
 
     return true;
