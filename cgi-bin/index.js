@@ -19,29 +19,14 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { createServer } from "node:http"
-import { createHandler } from "./cgi-core.js";
+process.stdout.write('Content-Type: text/html\n\n');
 
-const callback = createHandler({
-  urlPath: "/cgi-bin",
-  filePath: './cgi-bin',
-  extensions: {
-    "/usr/bin/perl -w": ["pl", "cgi"],
-    "/usr/bin/python": ["py"],
-    "/usr/local/bin/node": ["js", "node"]
-  },
-  indexExtension: "js",
-  debugOutput: true,
-  maxBuffer: 4 * 1024**2
-});
+process.stdout.write('<!doctype html>\n');
+process.stdout.write('<html>\n');
 
-const app = createServer(async (req, res) => {
-  if(!await callback(req, res)) {
-    // here, handle any routing outside of urlPath
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('<html><body>outside of url path /cgi-bin</body></html>');
-  }
-});
-app.listen(3001);
-
-console.log('go to http://127.0.0.1:3001/cgi-bin/env.js ;)');
+process.stdout.write('<body>\n');
+process.stdout.write(process.env.REQUEST_URI);
+process.stdout.write('<br/>\n');
+process.stdout.write(process.env.SCRIPT_FILENAME);
+process.stdout.write('</body>\n');
+process.stdout.write('</html>\n');

@@ -7,14 +7,31 @@ import {
   parseResponse
 } from '../lib/util.js';
 
+const config = {
+  urlPath: "/cgi-bin",
+  filePath: process.cwd(),
+  extensions: {
+    "/usr/bin/perl": ["pl", "cgi"],
+    "/usr/bin/python": ["py"],
+    "/usr/local/bin/node": ["js", "node"]
+  },
+  indexExtension: "js",
+  debugOutput: false,
+  maxBuffer: 2 * 1024**2
+};
+
 describe('cgi-core', () => {
   describe('getUrlFilePath', () => {
     it('should return filePath', async () => {
-      const filePath = getUrlFilePath('http://test.com/cgi-bin/files/script.cgi', '/cgi-bin');
+      const filePath = getUrlFilePath('http://test.com/cgi-bin/files/script.cgi', config);
       assert.strictEqual(filePath, 'files/script.cgi');
     });
+    it('should return filePath using indexExtension', async () => {
+      const filePath = getUrlFilePath('http://test.com/cgi-bin/files', config);
+      assert.strictEqual(filePath, 'files/index.js');
+    });
     it('should return null if url not within urlPath range', async () => {
-      const filePath = getUrlFilePath('http://test.com/images/picture.jpg', '/cgi-bin');
+      const filePath = getUrlFilePath('http://test.com/images/picture.jpg', config);
       assert.strictEqual(filePath, null);
     });
   });
@@ -31,21 +48,11 @@ script.cgi`);
   });
   describe('getExecPath', () => {
     it('should return an execPath', async () => {
-      const extensions = {
-        "/usr/bin/perl": ["pl", "cgi"],
-        "/usr/bin/python": ["py"],
-        "/usr/local/bin/node": ["js", "node"]
-      };
-      const execPath = getExecPath('/cgi-bin/script.cgi', extensions);
+      const execPath = getExecPath('/cgi-bin/script.cgi', config.extensions);
       assert.strictEqual(execPath, '/usr/bin/perl');
     });
     it('should return null', async () => {
-      const extensions = {
-        "/usr/bin/perl": ["pl", "cgi"],
-        "/usr/bin/python": ["py"],
-        "/usr/local/bin/node": ["js", "node"]
-      };
-      const execPath = getExecPath('/cgi-bin/script.exe', extensions);
+      const execPath = getExecPath('/cgi-bin/script.exe', config.extensions);
       assert.strictEqual(execPath, null);
     });
   });

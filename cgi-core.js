@@ -42,13 +42,14 @@ export const defaultConfig = {
   urlPath: "/cgi-bin",
   filePath: process.cwd(),
   extensions: defaultExtensions,
+  indexExtension: "js",
   debugOutput: false,
   maxBuffer: 2 * 1024**2
 };
 
 export function createHandler (config=defaultConfig) {
   return async function(req, res) {
-    const filePath = getUrlFilePath(req.url, config.urlPath);
+    const filePath = getUrlFilePath(req.url, config);
     if(filePath === null) {
       return false;
     }
