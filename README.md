@@ -3,6 +3,10 @@
 A thin wrapper for supporting CGI scripts in Node.js.
 
 > :construction: This is a work in progress. :construction:
+>
+> TODO roadmap:
+> -add more environment variables
+> -support Windows systems
 
 
 ## Installation
@@ -41,3 +45,38 @@ const app = createServer(async (req, res) => {
 app.listen(3000);
 
 ```
+
+
+# config options
+
+###  urlPath
+
+Base url for routing. Default: '/cgi-bin'
+
+###  filePath
+
+File path where the cgi files are located. Default: process.cwd()
+
+###  extensions
+
+Object containing file extension values, for given interpreter paths.
+Default:
+```javascript
+{
+  "/usr/bin/perl": ["pl", "cgi"],
+  "/usr/bin/python": ["py"],
+  "/usr/local/bin/node": ["js", "node"]
+}
+```
+
+###  indexExtension
+
+File extension to lookup for an index CGI script in any given directory. Default: 'js'
+
+###  debugOutput
+
+Set true to enable debug output. Default: false
+
+###  maxBuffer
+
+Size of the allowed http request and response payloads in bytes. Default: 2 * 1024 * 1024
