@@ -47,7 +47,9 @@ export const defaultConfig = {
   maxBuffer: 2 * 1024**2
 };
 
-export function createHandler (config=defaultConfig) {
+export function createHandler (configOptions={}) {
+  const config = {...defaultConfig, ...configOptions};
+  
   return async function(req, res) {
     const filePath = getUrlFilePath(req.url, config);
     if(filePath === null) {
