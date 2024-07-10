@@ -23,10 +23,20 @@ process.stdout.write('Content-Type: text/html\n\n');
 
 process.stdout.write('<!doctype html>\n');
 process.stdout.write('<html>\n');
+process.stdout.write(`
+<style>
+
+</style>
+`);
 
 process.stdout.write('<body>\n');
-process.stdout.write(process.env.REQUEST_URI);
-process.stdout.write('<br/>\n');
-process.stdout.write(process.env.SCRIPT_FILENAME);
+
+for(const i in process.env) {
+  process.stdout.write(`${i}: ${process.env[i]}<br/>\n`);
+}
+
+process.stdout.write('</br/></br/>\n');
+process.stdin.pipe(process.stdout);
+
 process.stdout.write('</body>\n');
 process.stdout.write('</html>\n');
