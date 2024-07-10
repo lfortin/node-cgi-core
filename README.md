@@ -57,11 +57,11 @@ Base url for routing. Default: '/cgi-bin'
 
 ###  filePath
 
-File path where the cgi files are located. Default: process.cwd()
+File path where the CGI files are located. Default: process.cwd()
 
 ###  extensions
 
-Object containing file extension values, for given interpreter paths.
+Object containing file extension values for given interpreter paths. If no interpreter path is found for a file extension, the CGI script will be called as a standalone executable.
 Default:
 ```javascript
 {
