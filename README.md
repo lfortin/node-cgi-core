@@ -28,7 +28,7 @@ import { createHandler } from 'cgi-core';
 
 const handler = createHandler({
   urlPath: '/cgi-bin',
-  filePath: process.cwd(),
+  filePath: './cgi-bin',
   extensions: {
     "/usr/bin/perl": ["pl", "cgi"],
     "/usr/bin/python": ["py"],
@@ -57,7 +57,7 @@ Base url for routing. Default: '/cgi-bin'
 
 ###  filePath
 
-File path where the CGI files are located. Default: process.cwd()
+File path where the CGI scripts are located. It is strongly advised to set a value for `filePath` (example: './cgi-bin'). Default: process.cwd()
 
 ###  extensions
 
