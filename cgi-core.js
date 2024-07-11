@@ -30,7 +30,8 @@ import {
   getUrlFilePath,
   getExecPath,
   createEnvObject,
-  parseResponse
+  parseResponse,
+  getRequestLog
 } from './lib/util.js';
 
 export const defaultExtensions = {
@@ -44,12 +45,13 @@ export const defaultConfig = {
   extensions: defaultExtensions,
   indexExtension: "js",
   debugOutput: false,
+  logRequests: false,
   maxBuffer: 2 * 1024**2
 };
 
 export function createHandler (configOptions={}) {
   const config = {...defaultConfig, ...configOptions};
-  
+
   return async function(req, res) {
     const filePath = getUrlFilePath(req.url, config);
     if(filePath === null) {
@@ -60,6 +62,9 @@ export function createHandler (configOptions={}) {
       res.writeHead(413, { 'Content-Type': 'text/plain' });
       res.end(STATUS_CODES[413]);
       req.destroy(); // Terminate the request
+      if(config.logRequests) {
+        console.log(getRequestLog(req, 413));
+      }
       return true;
     }
     const fullFilePath = resolve(config.filePath, filePath);
@@ -77,6 +82,9 @@ export function createHandler (configOptions={}) {
       res.writeHead(404, {'Content-Type': 'text/plain'});
       res.end(STATUS_CODES[404]);
       req.destroy(); // Terminate the request
+      if(config.logRequests) {
+        console.log(getRequestLog(req, 404));
+      }
       return true;
     }
 
@@ -105,6 +113,9 @@ export function createHandler (configOptions={}) {
           res.end(STATUS_CODES[statusCode]);
         }
         req.destroy(); // Terminate the request
+        if(config.logRequests) {
+          console.log(getRequestLog(req, statusCode));
+        }
         return;
       }
       
@@ -112,6 +123,9 @@ export function createHandler (configOptions={}) {
 
       res.writeHead(200, headers);
       res.end(bodyContent);
+      if(config.logRequests) {
+        console.log(getRequestLog(req, 200));
+      }
     });
     if(child.stdin) {
       // this just prevents exiting main node process and exits child process instead

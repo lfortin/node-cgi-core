@@ -79,6 +79,10 @@ File extension to lookup for an index CGI script in any given directory. Default
 
 Set true to enable debug output. Default: false
 
+###  logRequests
+
+Set true to print HTTP request logs to STDOUT. Default: false
+
 ###  maxBuffer
 
 Size of the allowed http request and response payloads in bytes. Default: 2 * 1024 * 1024

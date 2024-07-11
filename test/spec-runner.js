@@ -4,7 +4,8 @@ import {
   sanitizePath,
   getExecPath,
   createEnvObject,
-  parseResponse
+  parseResponse,
+  getRequestLog
 } from '../lib/util.js';
 
 const config = {
@@ -101,6 +102,16 @@ script.cgi`);
       assert.strictEqual(headers['Content-Type'], 'text/html');
       assert.strictEqual(headers['Set-Cookie'], 'yummy_cookie=choco');
       assert.ok(bodyContent.match(/hello world/));
+    });
+  });
+  describe('getRequestLog', () => {
+    it('should return a formatted request log', async () => {
+      const req = {
+        url: '/cgi-bin/script.cgi?param1=test&param2=test',
+        method: 'GET'
+      };
+      const log = getRequestLog(req, 200);
+      assert.strictEqual(log, 'GET /cgi-bin/script.cgi?param1=test&param2=test : 200');
     });
   });
 });

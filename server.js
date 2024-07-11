@@ -32,6 +32,7 @@ const callback = createHandler({
   },
   indexExtension: "js",
   debugOutput: true,
+  logRequests: true,
   maxBuffer: 4 * 1024**2
 });
 
