@@ -59,12 +59,7 @@ export function createHandler (configOptions={}) {
     }
     req.pause();
     if(parseInt(req.headers['content-length']) > config.maxBuffer) {
-      res.writeHead(413, { 'Content-Type': 'text/plain' });
-      res.end(STATUS_CODES[413]);
-      req.destroy(); // Terminate the request
-      if(config.logRequests) {
-        console.log(getRequestLog(req, 413));
-      }
+      terminateRequest(req, res, 413, config);
       return true;
     }
     const fullFilePath = resolve(config.filePath, filePath);
@@ -79,12 +74,7 @@ export function createHandler (configOptions={}) {
       }
       await access(fullFilePath, constants.F_OK);
     } catch(err) {
-      res.writeHead(404, {'Content-Type': 'text/plain'});
-      res.end(STATUS_CODES[404]);
-      req.destroy(); // Terminate the request
-      if(config.logRequests) {
-        console.log(getRequestLog(req, 404));
-      }
+      terminateRequest(req, res, 404, config);
       return true;
     }
 
@@ -105,16 +95,16 @@ export function createHandler (configOptions={}) {
           default:
             statusCode = 500;
         }
-        res.writeHead(statusCode, {'Content-Type': 'text/plain'});
         if(config.debugOutput) {
+          res.writeHead(statusCode, {'Content-Type': 'text/plain'});
           res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
           res.end(stderr);
+          req.destroy(); // Terminate the request
+          if(config.logRequests) {
+            console.log(getRequestLog(req, statusCode));
+          }
         } else {
-          res.end(STATUS_CODES[statusCode]);
-        }
-        req.destroy(); // Terminate the request
-        if(config.logRequests) {
-          console.log(getRequestLog(req, statusCode));
+          terminateRequest(req, res, statusCode, config);
         }
         return;
       }
@@ -127,24 +117,38 @@ export function createHandler (configOptions={}) {
         console.log(getRequestLog(req, 200));
       }
     });
-    if(child.stdin) {
-      // this just prevents exiting main node process and exits child process instead
-      child.stdin.on('error', () => {});
-      //req.pipe(child.stdin);
 
-      const handleRequestPayload = function() {
-        let chunk;
-        while (null !== (chunk = req.read(10240))) {
-          child.stdin.write(chunk);
-        }
-      }
-      handleRequestPayload();
-      req.on('readable', handleRequestPayload);
-      req.on('end', () => {
-        child.stdin.end('');
-      });
-    }
+    streamRequestPayload(child, req);
 
     return true;
+  }
+}
+
+export function terminateRequest(req, res, statusCode=500, config) {
+  res.writeHead(statusCode, {'Content-Type': 'text/plain'});
+  res.end(STATUS_CODES[statusCode]);
+  req.destroy(); // Terminate the request
+  if(config.logRequests) {
+    console.log(getRequestLog(req, statusCode));
+  }
+}
+
+export function streamRequestPayload(child, req) {
+  if(child.stdin) {
+    // this just prevents exiting main node process and exits child process instead
+    child.stdin.on('error', () => {});
+    //req.pipe(child.stdin);
+
+    const handleRequestPayload = function() {
+      let chunk;
+      while (null !== (chunk = req.read(10240))) {
+        child.stdin.write(chunk);
+      }
+    }
+    handleRequestPayload();
+    req.on('readable', handleRequestPayload);
+    req.on('end', () => {
+      child.stdin.end('');
+    });
   }
 }
