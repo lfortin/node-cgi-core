@@ -17,7 +17,8 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
-    "mocha": "^10.5.2"
+    "mocha": "^10.5.2",
+    "selfsigned": "^2.4.1"
   },
   "scripts": {
     "prepublishOnly": "npm test",

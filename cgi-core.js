@@ -113,6 +113,7 @@ export function createHandler (configOptions={}) {
 
       res.writeHead(200, headers);
       res.end(bodyContent);
+      req.destroy();
       if(config.logRequests) {
         console.log(getRequestLog(req, 200));
       }
