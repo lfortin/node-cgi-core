@@ -25,7 +25,7 @@
 import { STATUS_CODES } from 'node:http';
 import { resolve } from 'node:path';
 import { access, constants } from 'node:fs/promises';
-import { exec } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import {
   getUrlFilePath,
   getExecPath,
@@ -79,47 +79,50 @@ export function createHandler (configOptions={}) {
     }
 
     // TODO: use spawn for a better handling of child.stdin, child.stdout
-    const child = exec(fullExecPath, { env, maxBuffer: config.maxBuffer }, async (error, stdout, stderr) => {
-      if (error) {
-        if(res.headersSent) {
-          return;
-        }
-        let statusCode;
-        switch (error.code) {
-          case 'ENOENT':
-            statusCode = 404;
-            break;
-          case 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER':
-            statusCode = 413;
-            break;
-          default:
-            statusCode = 500;
-        }
-        if(config.debugOutput) {
-          res.writeHead(statusCode, {'Content-Type': 'text/plain'});
-          res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
-          res.end(stderr);
-          req.destroy(); // Terminate the request
-          if(config.logRequests) {
-            console.log(getRequestLog(req, statusCode));
-          }
-        } else {
-          terminateRequest(req, res, statusCode, config);
-        }
+    const child = spawn(fullExecPath, { env, shell: true, windowsHide: true, maxBuffer: config.maxBuffer });
+
+    child.on('close', (code) => {
+      console.log(`child process exited with code ${code}`);
+    });
+    child.on('error', error => {
+      console.log('error', error);
+    });
+    child.stderr.on('data', data => {
+      const error = data.toString();
+      console.log(error);
+      if(res.headersSent) {
         return;
       }
-      
-      const {headers, bodyContent} = await parseResponse(stdout);
-
-      res.writeHead(200, headers);
-      res.end(bodyContent);
-      req.destroy();
-      if(config.logRequests) {
-        console.log(getRequestLog(req, 200));
+      let statusCode;
+      switch (error.code) {
+        case 'ENOENT':
+          statusCode = 404;
+          break;
+        case 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER':
+          statusCode = 413;
+          break;
+        default:
+          statusCode = 500;
+      }
+      if(config.debugOutput) {
+        res.writeHead(statusCode, {'Content-Type': 'text/plain'});
+        res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
+        res.end(data);
+        req.destroy(); // Terminate the request
+        if(config.logRequests) {
+          console.log(getRequestLog(req, statusCode));
+        }
+      } else {
+        terminateRequest(req, res, statusCode, config);
       }
     });
 
-    streamRequestPayload(child, req);
+    await streamRequestPayload(child, req);
+    streamResponsePayload(child, req, res, config);
+
+    res.on('close', () => {
+      req.destroy();
+    });
 
     return true;
   }
@@ -134,7 +137,7 @@ export function terminateRequest(req, res, statusCode=500, config) {
   }
 }
 
-export function streamRequestPayload(child, req) {
+export async function streamRequestPayload(child, req) {
   if(child.stdin) {
     // this just prevents exiting main node process and exits child process instead
     child.stdin.on('error', () => {});
@@ -148,8 +151,39 @@ export function streamRequestPayload(child, req) {
     }
     handleRequestPayload();
     req.on('readable', handleRequestPayload);
-    req.on('end', () => {
-      child.stdin.end('');
+
+    return new Promise(resolve => {
+      req.on('end', () => {
+        child.stdin.end('');
+        resolve(true);
+      });
     });
+  }
+}
+
+export async function streamResponsePayload(child, req, res, config) {
+  if(res.headersSent) {
+    return;
+  }
+  if(child.stdout) {
+    // this just prevents exiting main node process and exits child process instead
+    child.stdout.on('error', () => {});
+
+    const {headers, bodyContent} = await parseResponse(child.stdout);
+
+    if(res.headersSent) {
+      return;
+    }
+    res.writeHead(200, headers);
+    res.end(bodyContent);
+    if(config.logRequests) {
+      console.log(getRequestLog(req, 200));
+    }
+  } else {
+    res.writeHead(204);
+    res.end('');
+    if(config.logRequests) {
+      console.log(getRequestLog(req, 204));
+    }
   }
 }
