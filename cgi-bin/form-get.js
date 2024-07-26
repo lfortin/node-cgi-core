@@ -31,7 +31,14 @@ action="/cgi-bin/env.js" method="GET"<br /><br />
 <form action="/cgi-bin/env.js" method="GET">
 input1 <input name="input1" size="30" maxlength="100" /><br /><br />
 input2 <input name="input2" size="30" maxlength="100" /><br /><br />
+radio1 <input id="radio1" name="radio1" type="radio" value="1" /><label for="radio1">1</label>
+<input id="radio2" name="radio1" type="radio" value="2" /><label for="radio2">2</label>
+<input id="radio3" name="radio1" type="radio" value="3" /><label for="radio3">3</label><br /><br />
+<label for="checkbox1">checkbox1</label> <input id="checkbox1" name="checkbox1" type="checkbox" value="true" />
+<label for="checkbox2">checkbox2</label> <input id="checkbox2" name="checkbox2" type="checkbox" value="true" />
+<label for="checkbox3">checkbox3</label> <input id="checkbox3" name="checkbox3" type="checkbox" value="true" /><br /><br />
 textarea1 <textarea name="textarea1" width="30" height="5" maxlength="100"></textarea><br /><br />
+color1 <input name="color1" type="color" /><br /><br />
 <input type="submit" value="send request" />
 </form>
 `);
