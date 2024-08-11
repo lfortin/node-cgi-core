@@ -78,32 +78,22 @@ export function createHandler (configOptions={}) {
       return true;
     }
 
-    // TODO: use spawn for a better handling of child.stdin, child.stdout
     const child = spawn(fullExecPath, { env, shell: true, windowsHide: true, maxBuffer: config.maxBuffer });
 
     child.on('close', (code) => {
-      console.log(`child process exited with code ${code}`);
+      //console.log(`child process exited with code ${code}`);
     });
     child.on('error', error => {
-      console.log('error', error);
+      //console.log('error', error);
     });
     child.stderr.on('data', data => {
       const error = data.toString();
-      console.log(error);
+      //console.log(error);
       if(res.headersSent) {
         return;
       }
-      let statusCode;
-      switch (error.code) {
-        case 'ENOENT':
-          statusCode = 404;
-          break;
-        case 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER':
-          statusCode = 413;
-          break;
-        default:
-          statusCode = 500;
-      }
+      const statusCode = 500;
+
       if(config.debugOutput) {
         res.writeHead(statusCode, {'Content-Type': 'text/plain'});
         res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);

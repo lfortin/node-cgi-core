@@ -1,4 +1,5 @@
 import assert from 'node:assert';
+import { PassThrough } from 'node:stream';
 import {
   getUrlFilePath,
   sanitizePath,
@@ -89,14 +90,15 @@ script.cgi`);
   });
   describe('parseResponse', () => {
     it('should return a parsed response', async () => {
-      const output = `Content-Type: text/html\nSet-Cookie: yummy_cookie=choco
+      const output = new PassThrough();
+      output.end(`Content-Type: text/html\nSet-Cookie: yummy_cookie=choco
 
       <html>
       <body>
       hello world
       </body>
       </html>
-      `;
+      `);
 
       const { headers, bodyContent } = await parseResponse(output);
       assert.strictEqual(headers['Content-Type'], 'text/html');
