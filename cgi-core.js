@@ -183,9 +183,11 @@ export async function streamResponsePayload(child, req, res, config) {
         }
         initChunkRead = true;
       }
-      if(stdoutEnded) {
-        res.end('');
-      }
+      process.nextTick(() => {
+        if(stdoutEnded) {
+          res.end('');
+        }
+      });
     }
     handleResponsePayload();
     child.stdout.on('readable', handleResponsePayload);
