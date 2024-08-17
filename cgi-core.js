@@ -86,26 +86,7 @@ export function createHandler (configOptions={}) {
     child.on('error', error => {
       //console.log('error', error);
     });
-    child.stderr.on('data', data => {
-      const error = data.toString();
-      //console.log(error);
-      if(res.headersSent) {
-        return;
-      }
-      const statusCode = 500;
-
-      if(config.debugOutput) {
-        res.writeHead(statusCode, {'Content-Type': 'text/plain'});
-        res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
-        res.end(data);
-        req.destroy(); // Terminate the request
-        if(config.logRequests) {
-          console.log(getRequestLog(req, statusCode));
-        }
-      } else {
-        terminateRequest(req, res, statusCode, config);
-      }
-    });
+    child.stderr.on('data', errorHandler.bind({req, res, config}));
 
     await streamRequestPayload(child, req);
     streamResponsePayload(child, req, res, config);
@@ -115,6 +96,28 @@ export function createHandler (configOptions={}) {
     });
 
     return true;
+  }
+}
+
+export function errorHandler(data) {
+  const {req, res, config} = this;
+  //const error = data.toString();
+  //console.log(error);
+  if(res.headersSent) {
+    return;
+  }
+  const statusCode = 500;
+
+  if(config.debugOutput) {
+    res.writeHead(statusCode, {'Content-Type': 'text/plain'});
+    res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
+    res.end(data);
+    req.destroy(); // Terminate the request
+    if(config.logRequests) {
+      console.log(getRequestLog(req, statusCode));
+    }
+  } else {
+    terminateRequest(req, res, statusCode, config);
   }
 }
 
