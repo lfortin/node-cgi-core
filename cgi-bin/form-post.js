@@ -37,6 +37,12 @@ radio1 <input id="radio1" name="radio1" type="radio" value="1" /><label for="rad
 <label for="checkbox1">checkbox1</label> <input id="checkbox1" name="checkbox1" type="checkbox" value="true" />
 <label for="checkbox2">checkbox2</label> <input id="checkbox2" name="checkbox2" type="checkbox" value="true" />
 <label for="checkbox3">checkbox3</label> <input id="checkbox3" name="checkbox3" type="checkbox" value="true" /><br /><br />
+select1 <select name="select1">
+<option value="" selected>-- select a value --</option>
+<option value="value1">value 1</option>
+<option value="value2">value 2</option>
+<option value="value3">value 3</option>
+</select><br /><br />
 textarea1 <textarea name="textarea1" width="30" height="5" maxlength="100"></textarea><br /><br />
 color1 <input name="color1" type="color" /><br /><br />
 <input type="submit" value="send request" />
