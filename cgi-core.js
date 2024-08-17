@@ -156,19 +156,39 @@ export async function streamResponsePayload(child, req, res, config) {
     return;
   }
   if(child.stdout) {
+    let initChunkRead = false;
+    let stdoutEnded = false;
+    child.stdout.pause();
     // this just prevents exiting main node process and exits child process instead
     child.stdout.on('error', () => {});
 
-    const {headers, bodyContent} = await parseResponse(child.stdout);
+    const handleResponsePayload = async function() {
+      let chunk;
+      while (null !== (chunk = child.stdout.read(10240))) {
+        if(!initChunkRead) {
+          const {headers, bodyContent} = await parseResponse(chunk);
 
-    if(res.headersSent) {
-      return;
+          if(!res.headersSent) {
+            res.writeHead(200, headers);
+            if(config.logRequests) {
+              console.log(getRequestLog(req, 200));
+            }
+          }
+          res.write(bodyContent);
+        } else {
+          res.write(chunk);
+        }
+        initChunkRead = true;
+      }
+      if(stdoutEnded) {
+        res.end('');
+      }
     }
-    res.writeHead(200, headers);
-    res.end(bodyContent);
-    if(config.logRequests) {
-      console.log(getRequestLog(req, 200));
-    }
+    handleResponsePayload();
+    child.stdout.on('readable', handleResponsePayload);
+    child.stdout.on('end', () => {
+      stdoutEnded = true;
+    });
   } else {
     res.writeHead(204);
     res.end('');
