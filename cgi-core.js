@@ -103,13 +103,15 @@ export function errorHandler(data) {
   const {req, res, config} = this;
   //const error = data.toString();
   //console.log(error);
-  if(res.headersSent) {
-    return;
-  }
+
   const statusCode = 500;
 
   if(config.debugOutput) {
-    res.writeHead(statusCode, {'Content-Type': 'text/plain'});
+    if(res.headersSent) {
+      res.statusCode = statusCode;
+    } else {
+      res.writeHead(statusCode, {'Content-Type': 'text/plain'});
+    }
     res.write(`${statusCode}: ${STATUS_CODES[statusCode]}\n\n`);
     res.end(data);
     req.destroy(); // Terminate the request
