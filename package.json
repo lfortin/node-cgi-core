@@ -1,7 +1,7 @@
 {
   "name": "cgi-core",
   "description": "thin wrapper for CGI scripts (work in progress)",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "homepage": "https://github.com/lfortin/node-cgi-core#readme",
   "repository": {
     "type": "git",
