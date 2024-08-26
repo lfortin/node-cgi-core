@@ -5,7 +5,7 @@ import {
   getExecPath,
   createEnvObject,
   parseResponse,
-  getRequestLog
+  getRequestLogger
 } from '../lib/util.js';
 
 const config = {
@@ -108,14 +108,25 @@ script.cgi`);
       assert.ok(bodyContent.match(/hello world/));
     });
   });
-  describe('getRequestLog', () => {
+  describe('getRequestLogger', () => {
     it('should return a formatted request log', async () => {
+      const requestLogger = getRequestLogger();
       const req = {
         url: '/cgi-bin/script.cgi?param1=test&param2=test',
         method: 'GET'
       };
-      const log = getRequestLog(req, 200);
+      const log = requestLogger(req, 200);
       assert.strictEqual(log, 'GET /cgi-bin/script.cgi?param1=test&param2=test : 200');
+    });
+    it('should not log twice the same request', async () => {
+      const requestLogger = getRequestLogger();
+      const req = {
+        url: '/cgi-bin/script.cgi?param1=test&param2=test',
+        method: 'GET'
+      };
+      requestLogger(req, 200);
+      const log = requestLogger(req, 200);
+      assert.strictEqual(log, undefined);
     });
   });
 });

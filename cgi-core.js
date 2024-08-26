@@ -31,7 +31,7 @@ import {
   getExecPath,
   createEnvObject,
   parseResponse,
-  getRequestLog
+  getRequestLogger
 } from './lib/util.js';
 
 export const defaultExtensions = {
@@ -48,6 +48,14 @@ export const defaultConfig = {
   logRequests: false,
   maxBuffer: 2 * 1024**2
 };
+const requestLogger = getRequestLogger();
+
+export function logRequest(req, statusCode) {
+  const log = requestLogger(req, statusCode);
+  if(log) {
+    console.log(log);
+  }
+}
 
 export function createHandler (configOptions={}) {
   const config = {...defaultConfig, ...configOptions};
@@ -116,7 +124,7 @@ export function errorHandler(data) {
     res.end(data);
     req.destroy(); // Terminate the request
     if(config.logRequests) {
-      console.log(getRequestLog(req, statusCode));
+      logRequest(req, statusCode);
     }
   } else {
     terminateRequest(req, res, statusCode, config);
@@ -124,11 +132,15 @@ export function errorHandler(data) {
 }
 
 export function terminateRequest(req, res, statusCode=500, config) {
-  res.writeHead(statusCode, {'Content-Type': 'text/plain'});
+  if(res.headersSent) {
+    res.statusCode = statusCode;
+  } else {
+    res.writeHead(statusCode, {'Content-Type': 'text/plain'});
+  }
   res.end(STATUS_CODES[statusCode]);
   req.destroy(); // Terminate the request
   if(config.logRequests) {
-    console.log(getRequestLog(req, statusCode));
+    logRequest(req, statusCode);
   }
 }
 
@@ -175,9 +187,6 @@ export async function streamResponsePayload(child, req, res, config) {
 
           if(!res.headersSent) {
             res.writeHead(200, headers);
-            if(config.logRequests) {
-              console.log(getRequestLog(req, 200));
-            }
           }
           res.write(bodyContent);
         } else {
@@ -195,12 +204,15 @@ export async function streamResponsePayload(child, req, res, config) {
     child.stdout.on('readable', handleResponsePayload);
     child.stdout.on('end', () => {
       stdoutEnded = true;
+      if(config.logRequests) {
+        logRequest(req, 200);
+      }
     });
   } else {
     res.writeHead(204);
     res.end('');
     if(config.logRequests) {
-      console.log(getRequestLog(req, 204));
+      logRequest(req, 204);
     }
   }
 }
