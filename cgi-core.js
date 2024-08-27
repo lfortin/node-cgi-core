@@ -124,7 +124,7 @@ export function errorHandler(data) {
     res.end(data);
     req.destroy(); // Terminate the request
     if(config.logRequests) {
-      logRequest(req, statusCode);
+      logRequest(req, res.statusCode);
     }
   } else {
     terminateRequest(req, res, statusCode, config);
@@ -140,7 +140,7 @@ export function terminateRequest(req, res, statusCode=500, config) {
   res.end(STATUS_CODES[statusCode]);
   req.destroy(); // Terminate the request
   if(config.logRequests) {
-    logRequest(req, statusCode);
+    logRequest(req, res.statusCode);
   }
 }
 
@@ -219,7 +219,7 @@ export async function streamResponsePayload(child, req, res, config) {
     res.writeHead(204);
     res.end('');
     if(config.logRequests) {
-      logRequest(req, 204);
+      logRequest(req, res.statusCode);
     }
   }
 }
