@@ -1,6 +1,6 @@
 # cgi-core
 
-A thin wrapper for supporting CGI scripts in Node.js.
+A minimalistic, zero-dependency wrapper for supporting CGI scripts in Node.js.
 
 > :construction: This is a work in progress. :construction:
 >
