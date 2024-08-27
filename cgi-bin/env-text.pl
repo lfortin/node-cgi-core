@@ -21,7 +21,16 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-print "Content-Type: text/plain\n\n";
+use strict;
+use warnings;
+use CGI;
+
+my $cgi = CGI->new;
+
+print $cgi->header(
+    -status => "200 OK",
+    -type   => 'text/plain'
+);
 
 print "<!doctype html>\n";
 print "<html>\n";
