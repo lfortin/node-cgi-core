@@ -175,6 +175,9 @@ export async function streamResponsePayload(child, req, res, config) {
   if(child.stdout) {
     let initChunkRead = false;
     let stdoutEnded = false;
+    let headers;
+    let bodyContent;
+    let status;
     child.stdout.pause();
     // this just prevents exiting main node process and exits child process instead
     child.stdout.on('error', () => {});
@@ -183,10 +186,14 @@ export async function streamResponsePayload(child, req, res, config) {
       let chunk;
       while (null !== (chunk = child.stdout.read(10240))) {
         if(!initChunkRead) {
-          const {headers, bodyContent} = await parseResponse(chunk);
+          try {
+            ({ headers, bodyContent, status } = await parseResponse(chunk));
+          } catch(err) {
+            terminateRequest(req, res, 500, config);
+          }
 
           if(!res.headersSent) {
-            res.writeHead(200, headers);
+            res.writeHead(status || 200, headers);
           }
           res.write(bodyContent);
         } else {

@@ -107,6 +107,21 @@ script.cgi`);
       assert.strictEqual(headers['Set-Cookie'], 'yummy_cookie=choco');
       assert.ok(bodyContent.match(/hello world/));
     });
+    it('should return a parsed response with a status header', async () => {
+      const output = `Content-Type: text/html\nStatus: 403 Forbidden
+
+      <html>
+      <body>
+      forbidden
+      </body>
+      </html>
+      `;
+
+      const { headers, bodyContent, status } = await parseResponse(output);
+      assert.strictEqual(headers['Content-Type'], 'text/html');
+      assert.strictEqual(status, 403);
+      assert.ok(bodyContent.match(/forbidden/));
+    });
   });
   describe('getRequestLogger', () => {
     it('should return a formatted request log', async () => {
