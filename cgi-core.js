@@ -204,6 +204,9 @@ export async function streamResponsePayload(child, req, res, config) {
       process.nextTick(() => {
         if(stdoutEnded) {
           res.end('');
+          if(config.logRequests) {
+            logRequest(req, res.statusCode);
+          }
         }
       });
     }
@@ -211,9 +214,6 @@ export async function streamResponsePayload(child, req, res, config) {
     child.stdout.on('readable', handleResponsePayload);
     child.stdout.on('end', () => {
       stdoutEnded = true;
-      if(config.logRequests) {
-        logRequest(req, 200);
-      }
     });
   } else {
     res.writeHead(204);
