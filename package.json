@@ -12,7 +12,7 @@
     "email": "laurent.fortin@gmail.com"
   },
   "main": "./cgi-core.js",
-  "type": "module",
+  "type": "commonjs",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "prepublishOnly": "npm test",
-    "start": "node server.js",
+    "start": "node server.mjs",
     "test": "mocha test/**/*.js"
   },
   "keywords": [

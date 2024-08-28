@@ -1,12 +1,12 @@
-import assert from 'node:assert';
-import {
+const assert = require('node:assert');
+const {
   getUrlFilePath,
   sanitizePath,
   getExecPath,
   createEnvObject,
   parseResponse,
   getRequestLogger
-} from '../lib/util.js';
+} = require('../lib/util.js');
 
 const config = {
   urlPath: "/cgi-bin",

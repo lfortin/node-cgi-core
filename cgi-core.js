@@ -22,24 +22,24 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { STATUS_CODES } from 'node:http';
-import { resolve } from 'node:path';
-import { access, constants } from 'node:fs/promises';
-import { spawn } from 'node:child_process';
-import {
+const { STATUS_CODES } = require('node:http');
+const { resolve } = require('node:path');
+const { access, constants } = require('node:fs/promises');
+const { spawn } = require('node:child_process');
+const {
   getUrlFilePath,
   getExecPath,
   createEnvObject,
   parseResponse,
   getRequestLogger
-} from './lib/util.js';
+} = require('./lib/util.js');
 
-export const defaultExtensions = {
+const defaultExtensions = {
   "/usr/bin/perl": ["pl", "cgi"],
   "/usr/bin/python": ["py"],
   "/usr/local/bin/node": ["js", "node"]
 };
-export const defaultConfig = {
+const defaultConfig = {
   urlPath: "/cgi-bin",
   filePath: process.cwd(),
   extensions: defaultExtensions,
@@ -50,14 +50,14 @@ export const defaultConfig = {
 };
 const requestLogger = getRequestLogger();
 
-export function logRequest(req, statusCode) {
+function logRequest(req, statusCode) {
   const log = requestLogger(req, statusCode);
   if(log) {
     console.log(log);
   }
 }
 
-export function createHandler (configOptions={}) {
+function createHandler (configOptions={}) {
   const config = {...defaultConfig, ...configOptions};
 
   return async function(req, res) {
@@ -107,7 +107,7 @@ export function createHandler (configOptions={}) {
   }
 }
 
-export function errorHandler(data) {
+function errorHandler(data) {
   const {req, res, config} = this;
   //const error = data.toString();
   //console.log(error);
@@ -131,7 +131,7 @@ export function errorHandler(data) {
   }
 }
 
-export function terminateRequest(req, res, statusCode=500, config) {
+function terminateRequest(req, res, statusCode=500, config) {
   if(res.headersSent) {
     res.statusCode = statusCode;
   } else {
@@ -144,7 +144,7 @@ export function terminateRequest(req, res, statusCode=500, config) {
   }
 }
 
-export async function streamRequestPayload(child, req) {
+async function streamRequestPayload(child, req) {
   if(child.stdin) {
     // this just prevents exiting main node process and exits child process instead
     child.stdin.on('error', () => {});
@@ -168,7 +168,7 @@ export async function streamRequestPayload(child, req) {
   }
 }
 
-export async function streamResponsePayload(child, req, res, config) {
+async function streamResponsePayload(child, req, res, config) {
   if(res.headersSent) {
     return;
   }
@@ -223,3 +223,9 @@ export async function streamResponsePayload(child, req, res, config) {
     }
   }
 }
+
+module.exports = {
+  defaultExtensions,
+  defaultConfig,
+  createHandler
+};
