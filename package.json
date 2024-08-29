@@ -13,10 +13,12 @@
   },
   "main": "./cgi-core.js",
   "type": "commonjs",
+  "types": "./cgi-core.d.ts",
   "engines": {
     "node": ">=16.0.0"
   },
   "devDependencies": {
+    "@types/node": "^22.5.1",
     "mocha": "^10.5.2",
     "selfsigned": "^2.4.1"
   },
