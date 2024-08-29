@@ -1,5 +1,7 @@
 # cgi-core
 
+[![Node.js (install, build and test)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml/badge.svg?branch=master&event=push)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml)
+
 A minimalistic, zero-dependency wrapper for supporting CGI scripts in Node.js.
 
 > :construction: This is a work in progress. :construction:
