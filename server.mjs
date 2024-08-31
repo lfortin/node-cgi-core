@@ -33,7 +33,9 @@ const callback = createHandler({
   indexExtension: "js",
   debugOutput: true,
   logRequests: true,
-  maxBuffer: 4 * 1024**2
+  maxBuffer: 4 * 1024**2,
+  requestChunkSize: 16 * 1024,
+  responseChunkSize: 16 * 1024
 });
 
 const app = createServer(async (req, res) => {

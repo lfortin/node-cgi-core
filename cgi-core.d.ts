@@ -17,4 +17,6 @@ interface Config {
     debugOutput: boolean;
     logRequests: boolean;
     maxBuffer: number;
+    requestChunkSize: number;
+    responseChunkSize: number;
 }

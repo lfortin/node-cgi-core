@@ -59,7 +59,7 @@ Base url for routing. Default: '/cgi-bin'
 
 ###  filePath
 
-File path where the CGI scripts are located. It is strongly advised to set a value for `filePath` (example: './cgi-bin'). Default: process.cwd()
+File path where the CGI scripts are located. It is strongly advised to set a value for `filePath` (example: './cgi-bin'). Default: `process.cwd()`
 
 ###  extensions
 
@@ -79,12 +79,20 @@ File extension to lookup for an index CGI script in any given directory. Default
 
 ###  debugOutput
 
-Set true to enable debug output. Default: false
+Set true to enable debug output. Default: `false`
 
 ###  logRequests
 
-Set true to print HTTP request logs to STDOUT. Default: false
+Set true to print HTTP request logs to STDOUT. Default: `false`
 
 ###  maxBuffer
 
-Size of the allowed http request and response payloads in bytes. Default: 2 * 1024 * 1024
+Size of the allowed HTTP request and response payloads in bytes. Default: `2 * 1024 * 1024` (2 MB)
+
+###  requestChunkSize
+
+Size of the HTTP request payload data chunks in bytes. Default: `16 * 1024` (16 KB)
+
+###  responseChunkSize
+
+Size of the HTTP response payload data chunks in bytes. Default: `16 * 1024` (16 KB)

@@ -46,7 +46,9 @@ const defaultConfig = {
   indexExtension: "js",
   debugOutput: false,
   logRequests: false,
-  maxBuffer: 2 * 1024**2
+  maxBuffer: 2 * 1024**2,
+  requestChunkSize: 16 * 1024,
+  responseChunkSize: 16 * 1024
 };
 const requestLogger = getRequestLogger();
 
@@ -96,7 +98,7 @@ function createHandler (configOptions={}) {
     });
     child.stderr.on('data', errorHandler.bind({req, res, config}));
 
-    await streamRequestPayload(child, req);
+    await streamRequestPayload(child, req, config);
     streamResponsePayload(child, req, res, config);
 
     res.on('close', () => {
@@ -144,7 +146,7 @@ function terminateRequest(req, res, statusCode=500, config) {
   }
 }
 
-async function streamRequestPayload(child, req) {
+async function streamRequestPayload(child, req, config) {
   if(child.stdin) {
     // this just prevents exiting main node process and exits child process instead
     child.stdin.on('error', () => {});
@@ -152,7 +154,7 @@ async function streamRequestPayload(child, req) {
 
     const handleRequestPayload = function() {
       let chunk;
-      while (null !== (chunk = req.read(10240))) {
+      while (null !== (chunk = req.read(config.requestChunkSize))) {
         child.stdin.write(chunk);
       }
     }
@@ -184,7 +186,7 @@ async function streamResponsePayload(child, req, res, config) {
 
     const handleResponsePayload = async function() {
       let chunk;
-      while (null !== (chunk = child.stdout.read(10240))) {
+      while (null !== (chunk = child.stdout.read(config.responseChunkSize))) {
         if(!initChunkRead) {
           try {
             ({ headers, bodyContent, status } = await parseResponse(chunk));
