@@ -190,6 +190,10 @@ async function streamResponsePayload(child, req, res, config) {
             ({ headers, bodyContent, status } = await parseResponse(chunk));
           } catch(err) {
             terminateRequest(req, res, 500, config);
+            initChunkRead = true;
+            child.stdout.removeListener('readable', handleResponsePayload);
+            child.stdout.resume();
+            return;
           }
 
           if(!res.headersSent) {
