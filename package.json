@@ -1,7 +1,7 @@
 {
   "name": "cgi-core",
   "description": "Minimalistic, zero-dependency wrapper for CGI scripts",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "homepage": "https://github.com/lfortin/node-cgi-core#readme",
   "repository": {
     "type": "git",
