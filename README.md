@@ -23,14 +23,14 @@ To install the latest stable version of `cgi-core`:
 # Synopsis
 
 ```javascript
-import { createServer } from 'node:http';
-import { createHandler } from 'cgi-core';
+import { createServer } from "node:http";
+import { createHandler } from "cgi-core";
 
 // create a http server that handles CGI requests under the url path /cgi-bin
 
 const handler = createHandler({
-  urlPath: '/cgi-bin',
-  filePath: './cgi-bin',
+  urlPath: "/cgi-bin",
+  filePath: "./cgi-bin",
   extensions: {
     "/usr/bin/perl": ["pl", "cgi"],
     "/usr/bin/python": ["py"],

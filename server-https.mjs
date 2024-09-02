@@ -25,33 +25,36 @@ import { createHandler } from "./cgi-core.js";
 
 const callback = createHandler({
   urlPath: "/cgi-bin",
-  filePath: './cgi-bin',
+  filePath: "./cgi-bin",
   extensions: {
     "/usr/bin/perl -w": ["pl", "cgi"],
     "/usr/bin/python": ["py"],
-    "/usr/local/bin/node": ["js", "node"]
+    "/usr/local/bin/node": ["js", "node"],
   },
   indexExtension: "js",
   debugOutput: true,
   logRequests: true,
-  maxBuffer: 4 * 1024**2,
+  maxBuffer: 4 * 1024 ** 2,
   requestChunkSize: 16 * 1024,
-  responseChunkSize: 16 * 1024
+  responseChunkSize: 16 * 1024,
 });
 
-const pems = selfsigned.generate([{ name: 'example cert', value: 'example.com', type: 'commonName' }], { days: 365 });
+const pems = selfsigned.generate(
+  [{ name: "example cert", value: "example.com", type: "commonName" }],
+  { days: 365 }
+);
 const options = {
   cert: pems.cert,
   key: pems.private,
 };
 
 const app = createServer(options, async (req, res) => {
-  if(!await callback(req, res)) {
+  if (!(await callback(req, res))) {
     // here, handle any routing outside of urlPath
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('<html><body>outside of url path /cgi-bin</body></html>');
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end("<html><body>outside of url path /cgi-bin</body></html>");
   }
 });
 app.listen(3001, () => {
-  console.log('go to https://127.0.0.1:3001/cgi-bin/env.js ;)');
+  console.log("go to https://127.0.0.1:3001/cgi-bin/env.js ;)");
 });
