@@ -179,5 +179,22 @@ script.cgi`);
       const log = requestLogger(req, 200);
       assert.strictEqual(log, undefined);
     });
+
+    it("should clear internal Map if size > 1000", async () => {
+      const requestLogger = getRequestLogger();
+      const req = {
+        url: "/cgi-bin/script.cgi?param1=test&param2=test",
+        method: "GET",
+      };
+      requestLogger(req, 200);
+      for (let i = 0; i <= 1000; i++) {
+        requestLogger({}, 200);
+      }
+      const log = requestLogger(req, 200);
+      assert.strictEqual(
+        log,
+        "GET /cgi-bin/script.cgi?param1=test&param2=test : 200"
+      );
+    });
   });
 });
