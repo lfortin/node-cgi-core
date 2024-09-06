@@ -25,16 +25,13 @@ print "Content-Type: text/html\n\n";
 
 print "<!doctype html>\n";
 print "<html>\n";
-print "
-<style>
-
-</style>
-";
-
+print "<head>\n";
+print "<link rel=\"stylesheet\" href=\"/cgi-bin/css/styles.js\" />\n";
+print "</head>\n";
 print "<body>\n";
 
 foreach my $key (keys %ENV) {
-  print "$key: $ENV{$key}<br/>\n";
+  print "<div>$key: $ENV{$key}</div>\n";
 }
 
 print "</body>\n";

@@ -34,16 +34,10 @@ print $cgi->header(
 
 print "<!doctype html>\n";
 print "<html>\n";
-print "
-<style>
-
-</style>
-";
-
 print "<body>\n";
 
 foreach my $key (keys %ENV) {
-  print "$key: $ENV{$key}<br/>\n";
+  print "$key: $ENV{$key}<br />\n";
 }
 
 print "</body>\n";

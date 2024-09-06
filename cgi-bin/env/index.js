@@ -23,19 +23,16 @@ process.stdout.write('Content-Type: text/html\n\n');
 
 process.stdout.write('<!doctype html>\n');
 process.stdout.write('<html>\n');
-process.stdout.write(`
-<style>
-
-</style>
-`);
-
+process.stdout.write('<head>\n');
+process.stdout.write(`<link rel="stylesheet" href="/cgi-bin/css/styles.js" />\n`);
+process.stdout.write('</head>\n');
 process.stdout.write('<body>\n');
 
 for(const i in process.env) {
-  process.stdout.write(`${i}: ${process.env[i]}<br/>\n`);
+  process.stdout.write(`<div>${i}: ${process.env[i]}</div>\n`);
 }
 
-process.stdout.write('</br/></br/>\n');
+process.stdout.write('<br /><br />\n');
 process.stdin.pipe(process.stdout);
 
 process.stdout.write('</body>\n');

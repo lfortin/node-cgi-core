@@ -19,21 +19,23 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-process.stdout.write('Content-Type: text/html\n\n');
+process.stdout.write('Content-Type: text/css\n\n');
 
-process.stdout.write('<!doctype html>\n');
-process.stdout.write('<html>\n');
-process.stdout.write('<body>\n');
-
-process.stdout.write(Buffer.alloc(16000).fill(' '));
-process.stdout.write('waiting for response<br /><br />');
-
-for(let i = 0; i <= 10; i++) {
-  setTimeout(() => {
-    process.stdout.write(Buffer.alloc(16000).fill(' '));
-    process.stdout.write(`<br />chunk ${i}<br />\n`);
-  }, 1000 * i);
+process.stdout.write(`
+div {
+  float: left;
+  clear: left;
+  margin: 0;
+  padding: 3px;
+  width: 100%;
+  font-size: 14px;
 }
 
-process.stdout.write('</body>\n');
-process.stdout.write('</html>\n');
+div:nth-child(odd) {
+  background-color: #EAEAEA;
+}
+
+div:nth-child(even) {
+  background-color: #F6F6F6;
+}
+`);

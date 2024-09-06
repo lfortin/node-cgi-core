@@ -23,7 +23,6 @@ process.stdout.write('Content-Type: text/html\n\n');
 
 process.stdout.write('<!doctype html>\n');
 process.stdout.write('<html>\n');
-
 process.stdout.write('<body>\n');
 
 process.stdout.write(`
@@ -37,5 +36,4 @@ file1 <input name="file1" type="file" /><br /><br />
 `);
 
 process.stdout.write('</body>\n');
-
 process.stdout.write('</html>\n');
