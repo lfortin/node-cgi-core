@@ -1,4 +1,5 @@
 const assert = require("node:assert");
+const mock = require("mock-os");
 const {
   getUrlFilePath,
   sanitizePath,
@@ -25,23 +26,67 @@ const config = {
 
 describe("cgi-core", () => {
   describe("getUrlFilePath", () => {
-    it("should return filePath", async () => {
-      const filePath = getUrlFilePath(
-        "http://test.com/cgi-bin/files/script.cgi",
-        config
-      );
-      assert.strictEqual(filePath, "files/script.cgi");
+    describe("posix", () => {
+      beforeEach(() => {
+        mock({
+          platform: "linux",
+        });
+      });
+      afterEach(() => {
+        mock.restore();
+      });
+      it("should return filePath", async () => {
+        const filePath = getUrlFilePath(
+          "http://test.com/cgi-bin/files/subfolder/script.cgi",
+          config
+        );
+        assert.strictEqual(filePath, "files/subfolder/script.cgi");
+      });
+      it("should return filePath using indexExtension", async () => {
+        const filePath = getUrlFilePath(
+          "http://test.com/cgi-bin/files/subfolder",
+          config
+        );
+        assert.strictEqual(filePath, "files/subfolder/index.js");
+      });
+      it("should return null if url not within urlPath range", async () => {
+        const filePath = getUrlFilePath(
+          "http://test.com/images/picture.jpg",
+          config
+        );
+        assert.strictEqual(filePath, null);
+      });
     });
-    it("should return filePath using indexExtension", async () => {
-      const filePath = getUrlFilePath("http://test.com/cgi-bin/files", config);
-      assert.strictEqual(filePath, "files/index.js");
-    });
-    it("should return null if url not within urlPath range", async () => {
-      const filePath = getUrlFilePath(
-        "http://test.com/images/picture.jpg",
-        config
-      );
-      assert.strictEqual(filePath, null);
+    describe("win32", () => {
+      beforeEach(() => {
+        mock({
+          platform: "win32",
+        });
+      });
+      afterEach(() => {
+        mock.restore();
+      });
+      it("should return filePath", async () => {
+        const filePath = getUrlFilePath(
+          "http://test.com/cgi-bin/files/subfolder/script.cgi",
+          config
+        );
+        assert.strictEqual(filePath, "files\\subfolder\\script.cgi");
+      });
+      it("should return filePath using indexExtension", async () => {
+        const filePath = getUrlFilePath(
+          "http://test.com/cgi-bin/files/subfolder",
+          config
+        );
+        assert.strictEqual(filePath, "files\\subfolder\\index.js");
+      });
+      it("should return null if url not within urlPath range", async () => {
+        const filePath = getUrlFilePath(
+          "http://test.com/images/picture.jpg",
+          config
+        );
+        assert.strictEqual(filePath, null);
+      });
     });
   });
   describe("sanitizePath", () => {
