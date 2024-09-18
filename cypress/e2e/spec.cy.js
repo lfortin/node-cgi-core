@@ -15,13 +15,12 @@ describe("HTTP response status", () => {
       expect(response.status).to.equal(200);
     });
   });
-  it("should get status 403 forbidden on specific script path", () => {
+  it("should get status 403 Forbidden", () => {
     cy.request({
       url: "/cgi-bin/forbidden.js",
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.equal(403);
-      //expect(response.body).to.have.property("error", "Not Found");
     });
   });
   it("should get status 404 Not Found", () => {
@@ -31,6 +30,14 @@ describe("HTTP response status", () => {
     }).then((response) => {
       expect(response.status).to.equal(404);
       expect(response.body).to.equal("Not Found");
+    });
+  });
+  it("should get status 500 Internal Server Error", () => {
+    cy.request({
+      url: "/cgi-bin/error.js",
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.equal(500);
     });
   });
   it("should get status 200 outside of url path", () => {
@@ -51,7 +58,6 @@ describe("HTTP response body", () => {
     cy.visit("/cgi-bin/env.js?test1=123&test2=12345");
 
     // Wait for the intercepted request and assert the response status
-    //cy.wait("@getData").its("response.statusCode").should("eq", 200);
     cy.wait("@getData").then((interception) => {
       expect(interception.response.statusCode).to.be.equal(200);
       expect(interception.response.body).to.not.be.undefined;
