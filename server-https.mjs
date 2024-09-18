@@ -29,14 +29,16 @@ const callback = createHandler({
   extensions: {
     "/usr/bin/perl -w": ["pl", "cgi"],
     "/usr/bin/python": ["py"],
+    "/usr/bin/ruby": ["rb"],
+    "/bin/bash": ["sh"],
     "/usr/local/bin/node": ["js", "node"],
   },
   indexExtension: "js",
   debugOutput: true,
   logRequests: true,
   maxBuffer: 4 * 1024 ** 2,
-  requestChunkSize: 16 * 1024,
-  responseChunkSize: 16 * 1024,
+  requestChunkSize: 4 * 1024,
+  responseChunkSize: 4 * 1024,
 });
 
 const pems = selfsigned.generate(

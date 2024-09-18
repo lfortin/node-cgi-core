@@ -28,6 +28,8 @@ const callback = createHandler({
   extensions: {
     "/usr/bin/perl -w": ["pl", "cgi"],
     "/usr/bin/python": ["py"],
+    "/usr/bin/ruby": ["rb"],
+    "/bin/bash": ["sh"],
     "/usr/local/bin/node": ["js", "node"],
   },
   indexExtension: "js",
