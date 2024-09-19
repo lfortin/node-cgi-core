@@ -28,7 +28,8 @@
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha test/**/*.js",
     "cy:open": "cypress open",
-    "prepublishOnly": "npm test",
+    "cy:run": "cypress run --e2e --headless --browser electron",
+    "prepublishOnly": "npm test && npm run cy:run",
     "start": "node server.mjs",
     "test": "mocha test/**/*.js"
   },
