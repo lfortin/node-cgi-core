@@ -9,7 +9,8 @@
   },
   "author": {
     "name": "Laurent Fortin",
-    "email": "laurent.fortin@gmail.com"
+    "email": "laurent.fortin@gmail.com",
+    "url": "http://lfortin.github.io"
   },
   "main": "./cgi-core.js",
   "type": "commonjs",
