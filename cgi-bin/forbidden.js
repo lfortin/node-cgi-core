@@ -19,22 +19,24 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-process.stdout.write('Status: 403 Forbidden\n');
-process.stdout.write('Content-Type: text/html\n\n');
+process.stdout.write("HTTP/1.1 403 Forbidden\n");
+process.stdout.write("Content-Type: text/html\n\n");
 
-process.stdout.write('<!doctype html>\n');
-process.stdout.write('<html>\n');
-process.stdout.write('<head>\n');
-process.stdout.write(`<link rel="stylesheet" href="/cgi-bin/css/styles.js" />\n`);
-process.stdout.write('</head>\n');
-process.stdout.write('<body>\n');
+process.stdout.write("<!doctype html>\n");
+process.stdout.write("<html>\n");
+process.stdout.write("<head>\n");
+process.stdout.write(
+  `<link rel="stylesheet" href="/cgi-bin/css/styles.js" />\n`
+);
+process.stdout.write("</head>\n");
+process.stdout.write("<body>\n");
 
-for(const i in process.env) {
+for (const i in process.env) {
   process.stdout.write(`<div>${i}: ${process.env[i]}</div>\n`);
 }
 
-process.stdout.write('<br /><br />\n');
+process.stdout.write("<br /><br />\n");
 process.stdin.pipe(process.stdout);
 
-process.stdout.write('</body>\n');
-process.stdout.write('</html>\n');
+process.stdout.write("</body>\n");
+process.stdout.write("</html>\n");

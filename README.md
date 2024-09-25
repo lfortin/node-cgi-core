@@ -2,7 +2,7 @@
 
 [![Node.js (install and test)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml/badge.svg?event=push)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml)
 
-A minimalistic, zero-dependency wrapper for supporting CGI scripts in Node.js.
+A minimalistic, zero-dependency wrapper for hosting CGI scripts with HTTP/1.1 support.
 
 > :construction: This is a work in progress. :construction:
 >

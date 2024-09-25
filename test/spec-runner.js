@@ -171,7 +171,9 @@ script.cgi`);
       assert.strictEqual(status, undefined);
     });
     it("should return a parsed response with a status header", async () => {
-      const output = `Content-Type: text/html\nStatus: 403 Forbidden
+      let output, headers, bodyContent, status;
+
+      output = `HTTP/1.1 403 Forbidden\nContent-Type: text/html
 
       <html>
       <body>
@@ -180,7 +182,21 @@ script.cgi`);
       </html>
       `;
 
-      const { headers, bodyContent, status } = await parseResponse(output);
+      ({ headers, bodyContent, status } = await parseResponse(output));
+      assert.strictEqual(headers["Content-Type"], "text/html");
+      assert.ok(bodyContent.match(/forbidden/));
+      assert.strictEqual(status, 403);
+
+      output = `Content-Type: text/html\nStatus: 403 Forbidden
+
+      <html>
+      <body>
+      forbidden
+      </body>
+      </html>
+      `;
+
+      ({ headers, bodyContent, status } = await parseResponse(output));
       assert.strictEqual(headers["Content-Type"], "text/html");
       assert.ok(bodyContent.match(/forbidden/));
       assert.strictEqual(status, 403);
