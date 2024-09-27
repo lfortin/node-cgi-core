@@ -48,6 +48,7 @@ const defaultConfig = {
   maxBuffer: 2 * 1024 ** 2,
   requestChunkSize: 16 * 1024,
   responseChunkSize: 16 * 1024,
+  statusPages: {},
 };
 
 function createHandler(configOptions = {}) {

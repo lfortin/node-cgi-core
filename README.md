@@ -96,3 +96,24 @@ Size of the HTTP request payload data chunks in bytes. Default: `16 * 1024` (16 
 ###  responseChunkSize
 
 Size of the HTTP response payload data chunks in bytes. Default: `16 * 1024` (16 KB)
+
+###  statusPages
+
+Object containing custom HTTP response payloads per status code. Default: `{}`
+Example:
+```javascript
+{
+  404: {
+    content: `<html>
+                <body>404: File not found</body>
+              </html>`,
+    contentType: "text/html"
+  },
+  500: {
+    content: `<html>
+                <body>500: Internal server error</body>
+              </html>`,
+    contentType: "text/html"
+  }
+}
+```
