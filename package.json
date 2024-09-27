@@ -23,6 +23,7 @@
     "cypress": "^13.14.2",
     "mocha": "^10.5.2",
     "mock-os": "^1.0.0",
+    "nodemon": "^3.1.7",
     "nyc": "^17.0.0",
     "selfsigned": "^2.4.1"
   },
@@ -31,7 +32,7 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run --e2e --headless --browser electron",
     "prepublishOnly": "npm test && npm run cy:run",
-    "start": "node server.mjs",
+    "start": "nodemon server.mjs",
     "test": "mocha test/**/*.js"
   },
   "keywords": [
