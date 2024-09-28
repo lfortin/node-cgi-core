@@ -51,7 +51,7 @@ app.listen(3000);
 ```
 
 
-# config options
+# Config options
 
 ###  urlPath
 
@@ -116,4 +116,20 @@ Example:
     contentType: "text/html"
   }
 }
+```
+
+
+# Supported CGI environment variables
+
+In addition to the standard HTTP-related variables, the following CGI environment variables are supported:
+
+```
+PATH
+SCRIPT_FILENAME
+SCRIPT_NAME
+SERVER_PROTOCOL
+SERVER_SOFTWARE
+QUERY_STRING
+REQUEST_METHOD
+REQUEST_URI
 ```
