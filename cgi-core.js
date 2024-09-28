@@ -49,6 +49,7 @@ const defaultConfig = {
   requestChunkSize: 16 * 1024,
   responseChunkSize: 16 * 1024,
   statusPages: {},
+  env: {},
 };
 
 function createHandler(configOptions = {}) {
@@ -67,7 +68,11 @@ function createHandler(configOptions = {}) {
     const fullFilePath = resolve(config.filePath, filePath);
     const execPath = getExecPath(filePath, config.extensions);
     const fullExecPath = `${execPath ? execPath + " " : ""}${fullFilePath}`;
-    const env = createEnvObject(req, { filePath, fullFilePath });
+    const env = createEnvObject(req, {
+      filePath,
+      fullFilePath,
+      env: config.env,
+    });
 
     // Check if the file exists
     try {

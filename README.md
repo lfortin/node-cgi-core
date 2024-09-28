@@ -12,13 +12,11 @@ A minimalistic, zero-dependency wrapper for hosting CGI scripts with HTTP/1.1 su
 >
 > -support Windows systems
 
-
 ## Installation
 
 To install the latest stable version of `cgi-core`:
 
     npm install cgi-core
-
 
 # Synopsis
 
@@ -34,37 +32,36 @@ const handler = createHandler({
   extensions: {
     "/usr/bin/perl": ["pl", "cgi"],
     "/usr/bin/python": ["py"],
-    "/usr/local/bin/node": ["js", "node"]
+    "/usr/local/bin/node": ["js", "node"],
   },
-  debugOutput: false
+  debugOutput: false,
 });
 
 const app = createServer(async (req, res) => {
-  if(!await handler(req, res)) {
+  if (!(await handler(req, res))) {
     // here, handle any routing outside of urlPath === '/cgi-bin'
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('outside of urlPath');
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("outside of urlPath");
   }
 });
 app.listen(3000);
-
 ```
-
 
 # Config options
 
-###  urlPath
+### urlPath
 
 Base url for routing. Default: '/cgi-bin'
 
-###  filePath
+### filePath
 
 File path where the CGI scripts are located. It is strongly advised to set a value for `filePath` (example: './cgi-bin'). Default: `process.cwd()`
 
-###  extensions
+### extensions
 
 Object containing file extension values for given interpreter paths. If no interpreter path is found for a file extension, the CGI script will be called as a standalone executable.
 Default:
+
 ```javascript
 {
   "/usr/bin/perl": ["pl", "cgi"],
@@ -73,35 +70,36 @@ Default:
 }
 ```
 
-###  indexExtension
+### indexExtension
 
 File extension to lookup for an index CGI script in any given directory. Default: 'js'
 
-###  debugOutput
+### debugOutput
 
 Set true to enable debug output. Default: `false`
 
-###  logRequests
+### logRequests
 
 Set true to print HTTP request logs to STDOUT. Default: `false`
 
-###  maxBuffer
+### maxBuffer
 
 Size of the allowed HTTP request and response payloads in bytes. Default: `2 * 1024 * 1024` (2 MB)
 
-###  requestChunkSize
+### requestChunkSize
 
 Size of the HTTP request payload data chunks in bytes. Default: `16 * 1024` (16 KB)
 
-###  responseChunkSize
+### responseChunkSize
 
 Size of the HTTP response payload data chunks in bytes. Default: `16 * 1024` (16 KB)
 
-###  statusPages
+### statusPages
 
 Object containing custom HTTP response payloads per status code. Default: `{}`
-Example:
+
 ```javascript
+// Example:
 {
   404: {
     content: `<html>
@@ -118,6 +116,19 @@ Example:
 }
 ```
 
+### env
+
+Object containing custom environment variables to pass to the CGI scripts. Default: `{}`
+
+```javascript
+// Example:
+{
+  DOCUMENT_ROOT: "/var/www/html",
+  SERVER_ADMIN: "admin@example.com",
+  SERVER_PORT: 80,
+  ANOTHER_VAR: "another value"
+}
+```
 
 # Supported CGI environment variables
 

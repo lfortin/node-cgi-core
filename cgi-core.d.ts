@@ -7,18 +7,22 @@ export function createHandler(
   configOptions?: Partial<Config>
 ): (req: IncomingMessage, res: ServerResponse) => Promise<boolean>;
 
-interface Extensions {
+export interface Extensions {
   [key: string]: Array<string>;
 }
 
-interface StatusPages {
+export interface StatusPages {
   [key: number]: {
     content: string;
     contentType: string;
   };
 }
 
-interface Config {
+export interface EnvVars {
+  [key: string]: string | number | boolean;
+}
+
+export interface Config {
   urlPath: string;
   filePath: string;
   extensions: Extensions;
@@ -29,4 +33,5 @@ interface Config {
   requestChunkSize: number;
   responseChunkSize: number;
   statusPages: StatusPages;
+  env: EnvVars;
 }

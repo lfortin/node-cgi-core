@@ -129,6 +129,7 @@ script.cgi`);
       const extraInfo = {
         filePath: "files/script.cgi",
         fullFilePath: "/home/username/cgi-bin/files/script.cgi",
+        env: { ANOTHER_VAR: "another value" },
       };
       const env = createEnvObject(req, extraInfo);
       assert.strictEqual(env.HTTP_CONTENT_TYPE, "application/json");
@@ -151,6 +152,7 @@ script.cgi`);
         "/home/username/cgi-bin/files/script.cgi"
       );
       assert.strictEqual(env.SCRIPT_NAME, "/files/script.cgi");
+      assert.strictEqual(env.ANOTHER_VAR, "another value");
     });
   });
   describe("parseResponse", () => {
