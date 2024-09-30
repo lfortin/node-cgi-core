@@ -117,7 +117,7 @@ script.cgi`);
   describe("createEnvObject", () => {
     it("should return an env object", async () => {
       const req = {
-        url: "/cgi-bin/script.cgi?param1=test&param2=test",
+        url: "/cgi-bin/script.cgi/extra/path?param1=test&param2=test",
         headers: {
           "Content-Type": "application/json",
           Cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
@@ -141,9 +141,10 @@ script.cgi`);
       assert.strictEqual(env.QUERY_STRING, "param1=test&param2=test");
       assert.strictEqual(env.REQUEST_METHOD, "GET");
       assert.strictEqual(env.PATH, process.env.PATH);
+      assert.strictEqual(env.PATH_INFO, "/extra/path");
       assert.strictEqual(
         env.REQUEST_URI,
-        "/cgi-bin/script.cgi?param1=test&param2=test"
+        "/cgi-bin/script.cgi/extra/path?param1=test&param2=test"
       );
       assert.strictEqual(env.SERVER_PROTOCOL, "HTTP/1.1");
       assert.strictEqual(env.SERVER_SOFTWARE, `Node.js/${process.version}`);

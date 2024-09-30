@@ -136,6 +136,7 @@ In addition to the standard HTTP-related variables, the following CGI environmen
 
 ```
 PATH
+PATH_INFO
 SCRIPT_FILENAME
 SCRIPT_NAME
 SERVER_PROTOCOL
