@@ -135,6 +135,8 @@ Object containing custom environment variables to pass to the CGI scripts. Defau
 In addition to the standard HTTP-related variables, the following CGI environment variables are supported:
 
 ```
+CONTENT_LENGTH
+CONTENT_TYPE
 PATH
 PATH_INFO
 SCRIPT_FILENAME

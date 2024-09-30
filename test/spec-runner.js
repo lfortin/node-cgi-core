@@ -120,6 +120,7 @@ script.cgi`);
         url: "/cgi-bin/script.cgi/extra/path?param1=test&param2=test",
         headers: {
           "Content-Type": "application/json",
+          "Content-Length": 1024,
           Cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
           Host: "www.example.org",
         },
@@ -133,6 +134,9 @@ script.cgi`);
       };
       const env = createEnvObject(req, extraInfo);
       assert.strictEqual(env.HTTP_CONTENT_TYPE, "application/json");
+      assert.strictEqual(env.HTTP_CONTENT_LENGTH, 1024);
+      assert.strictEqual(env.CONTENT_TYPE, "application/json");
+      assert.strictEqual(env.CONTENT_LENGTH, 1024);
       assert.strictEqual(
         env.HTTP_COOKIE,
         "yummy_cookie=choco; tasty_cookie=strawberry"
