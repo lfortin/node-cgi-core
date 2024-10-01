@@ -2,7 +2,7 @@
 
 [![Node.js (install and test)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml/badge.svg?event=push)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml)
 
-A minimalistic, zero-dependency wrapper for hosting CGI scripts with HTTP/1.1 support. Released under the [MIT License](https://opensource.org/license/mit).
+A minimalistic, zero-dependency wrapper for hosting [CGI scripts](https://github.com/lfortin/node-cgi-core/blob/master/sample-scripts.md) with HTTP/1.1 support. Released under the [MIT License](https://opensource.org/license/mit).
 
 ## Installation
 
