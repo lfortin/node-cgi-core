@@ -2,15 +2,7 @@
 
 [![Node.js (install and test)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml/badge.svg?event=push)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml)
 
-A minimalistic, zero-dependency wrapper for hosting CGI scripts with HTTP/1.1 support.
-
-> :construction: This is a work in progress. :construction:
->
-> TODO roadmap:
->
-> -add more environment variables
->
-> -support Windows systems
+A minimalistic, zero-dependency wrapper for hosting CGI scripts with HTTP/1.1 support. Released under the [MIT License](https://opensource.org/license/mit).
 
 ## Installation
 
@@ -123,9 +115,7 @@ Object containing custom environment variables to pass to the CGI scripts. Defau
 ```javascript
 // Example:
 {
-  DOCUMENT_ROOT: "/var/www/html",
   SERVER_ADMIN: "admin@example.com",
-  SERVER_PORT: 80,
   ANOTHER_VAR: "another value"
 }
 ```
