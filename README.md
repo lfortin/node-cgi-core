@@ -137,3 +137,11 @@ QUERY_STRING
 REQUEST_METHOD
 REQUEST_URI
 ```
+
+# License
+
+`cgi-core` is released under the [MIT License](https://opensource.org/license/mit).
+
+**100% Free:** `cgi-core` will always be free to use in both proprietary and open-source projects.
+
+**Attribution is required:** You must retain my name and the license information in any distributed code. These items do not have to be user-facing and can remain within the codebase.
