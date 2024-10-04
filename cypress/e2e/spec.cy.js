@@ -15,6 +15,14 @@ describe("HTTP response status", () => {
       expect(response.status).to.equal(200);
     });
   });
+  it("should get status 204 No Content", () => {
+    cy.request({
+      url: "/cgi-bin/no-content.js",
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.equal(204);
+    });
+  });
   it("should get status 403 Forbidden", () => {
     cy.request({
       url: "/cgi-bin/forbidden.js",

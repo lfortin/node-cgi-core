@@ -6,6 +6,7 @@ const {
   getExecPath,
   createEnvObject,
   parseResponse,
+  HeaderError,
   getRequestLogger,
 } = require("../lib/util");
 
@@ -222,6 +223,19 @@ script.cgi`);
       assert.strictEqual(headers["Content-Type"], "text/html");
       assert.ok(bodyContent.match(/hello world/));
       assert.strictEqual(status, undefined);
+    });
+    it("should throw if end of headers line is missing", async () => {
+      const output = `Content-Type: text/html\n`;
+
+      await assert.rejects(
+        async () => {
+          await parseResponse(output);
+        },
+        (err) => {
+          assert.ok(err instanceof HeaderError);
+          return true;
+        }
+      );
     });
   });
   describe("getRequestLogger", () => {
