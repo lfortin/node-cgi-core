@@ -57,22 +57,19 @@ function createHandler(configOptions = {}) {
 
   return async function (req, res) {
     const filePath = getUrlFilePath(req.url, config);
+
     if (filePath === null) {
       return false;
     }
+
     req.pause();
+
     if (parseInt(req.headers["content-length"]) > config.maxBuffer) {
       terminateRequest(req, res, 413, config);
       return true;
     }
+
     const fullFilePath = resolve(config.filePath, filePath);
-    const execPath = getExecPath(filePath, config.extensions);
-    const fullExecPath = `${execPath ? execPath + " " : ""}${fullFilePath}`;
-    const env = createEnvObject(req, {
-      filePath,
-      fullFilePath,
-      env: config.env,
-    });
 
     // Check if the file exists
     try {
@@ -84,6 +81,14 @@ function createHandler(configOptions = {}) {
       terminateRequest(req, res, 404, config);
       return true;
     }
+
+    const execPath = getExecPath(filePath, config.extensions);
+    const fullExecPath = `${execPath ? execPath + " " : ""}${fullFilePath}`;
+    const env = createEnvObject(req, {
+      filePath,
+      fullFilePath,
+      env: config.env,
+    });
 
     const child = spawn(fullExecPath, {
       env,
