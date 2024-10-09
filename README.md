@@ -38,6 +38,7 @@ const app = createServer(async (req, res) => {
 });
 app.listen(3000);
 ```
+Usage example using [Express](https://github.com/lfortin/node-cgi-core/blob/master/express.md).
 
 # Config options
 
