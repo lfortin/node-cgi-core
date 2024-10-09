@@ -21,8 +21,8 @@
   "devDependencies": {
     "@types/node": "^22.5.1",
     "cypress": "^13.14.2",
+    "express": "^4.21.1",
     "mocha": "^10.5.2",
-    "mock-os": "^1.0.0",
     "nodemon": "^3.1.7",
     "nyc": "^17.0.0",
     "selfsigned": "^2.4.1"
