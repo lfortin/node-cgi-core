@@ -20,7 +20,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import express from "express";
-import { createHandler } from "./cgi-core.js";
+import { createHandler } from "../cgi-core.js";
 
 const config = {
   urlPath: "/cgi-bin",

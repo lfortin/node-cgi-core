@@ -19,9 +19,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { createServer } from "node:https";
-import selfsigned from "selfsigned";
-import { createHandler } from "./cgi-core.js";
+import { createServer } from "node:http";
+import { createHandler } from "../cgi-core.js";
 
 const callback = createHandler({
   urlPath: "/cgi-bin",
@@ -41,16 +40,7 @@ const callback = createHandler({
   responseChunkSize: 4 * 1024,
 });
 
-const pems = selfsigned.generate(
-  [{ name: "example cert", value: "example.com", type: "commonName" }],
-  { days: 365 }
-);
-const options = {
-  cert: pems.cert,
-  key: pems.private,
-};
-
-const app = createServer(options, async (req, res) => {
+const app = createServer(async (req, res) => {
   const requestHandled = await callback(req, res);
 
   if (!requestHandled) {
@@ -60,5 +50,5 @@ const app = createServer(options, async (req, res) => {
   }
 });
 app.listen(3001, () => {
-  console.log("go to https://127.0.0.1:3001/cgi-bin/env.js ;)");
+  console.log("go to http://127.0.0.1:3001/cgi-bin/env.js ;)");
 });
