@@ -4,8 +4,6 @@ WORKDIR /usr/src/app
 
 RUN npm install --save serve-static finalhandler cgi-core
 
-COPY ./cgi-core.js ./
-COPY ./lib/ ./lib/
 COPY ./server/ ./server/
 
 VOLUME ["/usr/src/app/htdocs"]
