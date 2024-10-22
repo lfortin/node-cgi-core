@@ -23,7 +23,7 @@ import { createServer } from "node:https";
 import selfsigned from "selfsigned";
 import { createHandler } from "../cgi-core.js";
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 const callback = createHandler({
   urlPath: "/cgi-bin",
