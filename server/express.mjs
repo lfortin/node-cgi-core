@@ -22,6 +22,8 @@
 import express from "express";
 import { createHandler } from "../cgi-core.js";
 
+const port = 3001;
+
 const config = {
   urlPath: "/cgi-bin",
   filePath: "./cgi-bin",
@@ -38,6 +40,7 @@ const config = {
   maxBuffer: 4 * 1024 ** 2,
   requestChunkSize: 4 * 1024,
   responseChunkSize: 4 * 1024,
+  env: { SERVER_PORT: port },
 };
 
 const app = express();
@@ -50,6 +53,6 @@ app.use((req, res) => {
   res.send("<html><body>outside of url path /cgi-bin</body></html>");
 });
 
-app.listen(3001, () => {
-  console.log("go to http://127.0.0.1:3001/cgi-bin/env.js ;)");
+app.listen(port, () => {
+  console.log(`go to http://127.0.0.1:${port}/cgi-bin/env.js ;)`);
 });

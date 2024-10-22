@@ -23,6 +23,8 @@ import { createServer } from "node:https";
 import selfsigned from "selfsigned";
 import { createHandler } from "../cgi-core.js";
 
+const port = 3001;
+
 const callback = createHandler({
   urlPath: "/cgi-bin",
   filePath: "./cgi-bin",
@@ -39,6 +41,7 @@ const callback = createHandler({
   maxBuffer: 4 * 1024 ** 2,
   requestChunkSize: 4 * 1024,
   responseChunkSize: 4 * 1024,
+  env: { SERVER_PORT: port },
 });
 
 const pems = selfsigned.generate(
@@ -59,6 +62,6 @@ const app = createServer(options, async (req, res) => {
     res.end("<html><body>outside of url path /cgi-bin</body></html>");
   }
 });
-app.listen(3001, () => {
-  console.log("go to https://127.0.0.1:3001/cgi-bin/env.js ;)");
+app.listen(port, () => {
+  console.log(`go to https://127.0.0.1:${port}/cgi-bin/env.js ;)`);
 });
