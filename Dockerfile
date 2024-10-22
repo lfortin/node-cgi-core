@@ -21,4 +21,4 @@ CMD ["node", "server/docker.mjs"]
 #
 # 2-then, run a container:
 #
-# docker run -p 3001:3001 -v ./cgi-bin:/usr/src/app/cgi-bin -v ./htdocs:/usr/src/app/htdocs cgi-server
+# docker run -e PORT=3001 -p 3001:3001 -v ./cgi-bin:/usr/src/app/cgi-bin -v ./htdocs:/usr/src/app/htdocs cgi-server

@@ -24,7 +24,7 @@ import serveStatic from "serve-static";
 import finalhandler from "finalhandler";
 import { createHandler } from "cgi-core";
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 const staticHandler = serveStatic("/usr/src/app/htdocs", {
   index: ["index.html", "index.htm"],
@@ -43,5 +43,5 @@ const app = createServer(async (req, res) => {
   }
 });
 app.listen(port, () => {
-  console.log(`listening to port ${port}`);
+  console.log(`listening on port ${port}`);
 });
