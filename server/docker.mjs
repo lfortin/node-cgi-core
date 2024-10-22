@@ -32,6 +32,7 @@ const staticHandler = serveStatic("/usr/src/app/htdocs", {
 
 const cgiHandler = createHandler({
   filePath: "/usr/src/app/cgi-bin",
+  debugOutput: true,
   env: { SERVER_PORT: port },
 });
 
