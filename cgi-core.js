@@ -71,14 +71,19 @@ function createHandler(configOptions = {}) {
 
     const fullFilePath = resolve(config.filePath, filePath);
 
-    // Check if the file exists
+    // Check file permissions
     try {
       if (!filePath) {
-        throw "no filePath";
+        throw new Error("missing filePath");
       }
       await access(fullFilePath, constants.F_OK);
+      await access(fullFilePath, constants.X_OK);
     } catch (err) {
-      terminateRequest(req, res, 404, config);
+      if (err.code === "ENOENT") {
+        terminateRequest(req, res, 404, config);
+        return true;
+      }
+      errorHandler.apply({ req, res, config }, [err.message]);
       return true;
     }
 
