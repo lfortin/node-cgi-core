@@ -3,7 +3,7 @@ FROM node:20-alpine
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache perl python3 ruby bash
-RUN npm install --save serve-static finalhandler cgi-core
+RUN npm install --no-cache serve-static finalhandler cgi-core
 
 COPY ./server/ ./server/
 
