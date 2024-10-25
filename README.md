@@ -40,6 +40,7 @@ const app = createServer(async (req, res) => {
 });
 app.listen(3000);
 ```
+
 Usage example using [Express](https://github.com/lfortin/node-cgi-core/blob/master/express.md).
 
 # Config options
@@ -121,6 +122,26 @@ Object containing custom environment variables to pass to the CGI scripts. Defau
   SERVER_ADMIN: "admin@example.com",
   ANOTHER_VAR: "another value"
 }
+```
+
+# Start a CGI Server from the Command Line
+
+The command `cgi-server` can be used to run an HTTP server to serve CGI scripts.
+
+```bash
+npx cgi-server --port 3001 --urlPath /cgi-bin --filePath ./cgi-bin
+```
+
+### Available arguments
+
+```
+  -h, --help                    Display help
+  --urlPath <urlPath>           Set base url path for routing
+  --filePath <filePath>         Set file path where the CGI scripts are located
+  --indexExtension <extension>  Set file extension to lookup for index files
+  -d --debugOutput              Output errors for HTTP status 500
+  -l --logRequests              Log HTTP requests to STDOUT
+  -p --port <port>              Set the port to listen on
 ```
 
 # Supported CGI environment variables

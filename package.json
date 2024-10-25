@@ -15,6 +15,9 @@
   "main": "./cgi-core.js",
   "type": "commonjs",
   "types": "./cgi-core.d.ts",
+  "bin": {
+    "cgi-server": "./bin/cgi-server.mjs"
+  },
   "engines": {
     "node": ">=16.0.0"
   },
