@@ -176,6 +176,6 @@ REQUEST_URI
 
 `cgi-core` is released under the [MIT License](https://github.com/lfortin/node-cgi-core/blob/master/LICENSE).
 
-**100% Free:** `cgi-core` will always be free to use in both proprietary and open-source projects.
+**100% Free:** `cgi-core` can be used freely in both proprietary and open-source projects.
 
-**Attribution is required:** You must retain my name and the license information in any distributed code. These items do not have to be user-facing and can remain within the codebase.
+**Attribution is required:** You must retain the author's name and the license information in any distributed code. These items do not need to be user-facing and can remain within the codebase.
