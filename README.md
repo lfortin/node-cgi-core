@@ -4,13 +4,23 @@
 
 A minimalistic, zero-dependency wrapper for hosting [CGI scripts](https://github.com/lfortin/node-cgi-core/blob/master/sample-scripts.md) with HTTP/1.1 support. Released under the [MIT License](https://opensource.org/license/mit).
 
-## Installation
+## Getting Started
 
-To install the latest stable version of `cgi-core`:
+Install the latest stable version of `cgi-core`:
 
-    npm install cgi-core
+```bash
+npm install cgi-core
+```
 
-# Synopsis
+Then, start a CGI server:
+
+```bash
+npx cgi-server --filePath ./cgi-bin
+```
+
+# Basic Usage
+
+Here’s an example of how to set up a CGI server with `cgi-core`:
 
 ```javascript
 import { createServer } from "node:http";
@@ -43,7 +53,7 @@ app.listen(3000);
 
 Usage example using [Express](https://github.com/lfortin/node-cgi-core/blob/master/express.md).
 
-# Config options
+# Configuration options
 
 ### urlPath
 
