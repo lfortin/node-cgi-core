@@ -67,9 +67,9 @@ if (values.help) {
   --urlPath <urlPath>           Set base url path for routing
   --filePath <filePath>         Set file path where the CGI scripts are located
   --indexExtension <extension>  Set file extension to lookup for index files
-  -d --debugOutput              Output errors for HTTP status 500
-  -l --logRequests              Log HTTP requests to STDOUT
-  -p --port <port>              Set the port to listen on
+  -d, --debugOutput             Output errors for HTTP status 500
+  -l, --logRequests             Log HTTP requests to STDOUT
+  -p, --port <port>             Set the port to listen on
     `);
   process.exit();
 }
