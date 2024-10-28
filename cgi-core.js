@@ -33,11 +33,19 @@ const {
   streamResponsePayload,
 } = require("./lib/wrapper");
 
-const defaultExtensions = {
-  "/usr/bin/perl": ["pl", "cgi"],
-  "/usr/bin/python": ["py"],
-  "/usr/local/bin/node": ["js", "node"],
-};
+const defaultExtensions =
+  process.platform === "win32"
+    ? {
+        perl: ["pl", "cgi"],
+        python: ["py"],
+        node: ["js", "node"],
+      }
+    : {
+        "/usr/bin/perl": ["pl", "cgi"],
+        "/usr/bin/python": ["py"],
+        "/usr/local/bin/node": ["js", "node"],
+      };
+
 const defaultConfig = {
   urlPath: "/cgi-bin",
   filePath: process.cwd(),
