@@ -28,7 +28,7 @@ describe("cgi-core", () => {
   describe("getUrlFilePath", () => {
     it("should return filePath", async () => {
       const filePath = getUrlFilePath(
-        "http://test.com/cgi-bin/files/subfolder/script.cgi",
+        "http://test.com/cgi-bin/files/subfolder/script.cgi/path/info?test=1",
         config
       );
       assert.strictEqual(filePath, "files/subfolder/script.cgi");
