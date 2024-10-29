@@ -69,10 +69,18 @@ Object containing file extension values for given interpreter paths. If no inter
 Default:
 
 ```javascript
+// on POSIX systems
 {
   "/usr/bin/perl": ["pl", "cgi"],
   "/usr/bin/python": ["py"],
   "/usr/local/bin/node": ["js", "node"]
+}
+
+// on Windows systems
+{
+  "perl": ["pl", "cgi"],
+  "python": ["py"],
+  "node": ["js", "node"]
 }
 ```
 
