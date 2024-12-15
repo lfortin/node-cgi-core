@@ -142,6 +142,18 @@ Object containing custom environment variables to pass to the CGI scripts. Defau
 }
 ```
 
+An updater function can also be passed to the `env` option to update the environment variables on each request. It gets the environment variables object and the incoming HTTP request as arguments.
+
+```javascript
+// Example:
+(env, req) => {
+  env.SERVER_ADMIN = "admin@example.com";
+  env.ANOTHER_VAR = "another value";
+  env.VALUE_FROM_REQUEST = req.headers["X-Custom-Header"];
+  return env;
+}
+```
+
 # Start a CGI Server from the Command Line
 
 The command `cgi-server` can be used to run an HTTP server to serve CGI scripts.

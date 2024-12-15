@@ -33,5 +33,5 @@ export interface Config {
   requestChunkSize: number;
   responseChunkSize: number;
   statusPages: StatusPages;
-  env: EnvVars;
+  env: EnvVars | ((env: EnvVars, req: IncomingMessage) => EnvVars);
 }

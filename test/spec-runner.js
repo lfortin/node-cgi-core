@@ -1,4 +1,5 @@
 const assert = require("node:assert");
+const { randomUUID } = require("node:crypto");
 const {
   getUrlFilePath,
   sanitizePath,
@@ -85,13 +86,15 @@ script.cgi`);
         },
         method: "GET",
         httpVersion: "1.1",
+        uniqueId: randomUUID(),
       };
       const extraInfo = {
         filePath: "files/script.cgi",
         fullFilePath: "/home/username/cgi-bin/files/script.cgi",
         env: { ANOTHER_VAR: "another value" },
       };
-      const env = createEnvObject(req, extraInfo);
+      let env = createEnvObject(req, extraInfo);
+
       assert.strictEqual(env.HTTP_CONTENT_TYPE, "application/json");
       assert.strictEqual(env.HTTP_CONTENT_LENGTH, 1024);
       assert.strictEqual(env.CONTENT_TYPE, "application/json");
@@ -117,6 +120,13 @@ script.cgi`);
       );
       assert.strictEqual(env.SCRIPT_NAME, "/files/script.cgi");
       assert.strictEqual(env.ANOTHER_VAR, "another value");
+
+      extraInfo.env = function (env, req) {
+        env.UNIQUE_ID = req.uniqueId;
+        return env;
+      };
+      env = createEnvObject(req, extraInfo);
+      assert.strictEqual(env.UNIQUE_ID, req.uniqueId);
     });
   });
   describe("parseResponse", () => {

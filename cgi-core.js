@@ -99,11 +99,18 @@ function createHandler(configOptions = {}) {
 
     const execPath = getExecPath(filePath, config.extensions);
     const fullExecPath = `${execPath ? execPath + " " : ""}${fullFilePath}`;
-    const env = createEnvObject(req, {
-      filePath,
-      fullFilePath,
-      env: config.env,
-    });
+
+    let env;
+    try {
+      env = createEnvObject(req, {
+        filePath,
+        fullFilePath,
+        env: config.env,
+      });
+    } catch (err) {
+      errorHandler.apply({ req, res, config }, [err.message]);
+      return true;
+    }
 
     const child = spawn(fullExecPath, {
       env,

@@ -20,6 +20,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import { createServer } from "node:https";
+import { randomUUID } from "node:crypto";
 import selfsigned from "selfsigned";
 import { createHandler } from "../cgi-core.js";
 
@@ -41,7 +42,11 @@ const callback = createHandler({
   maxBuffer: 4 * 1024 ** 2,
   requestChunkSize: 4 * 1024,
   responseChunkSize: 4 * 1024,
-  env: { SERVER_PORT: port },
+  env: (env, req) => {
+    env.SERVER_PORT = port;
+    env.UNIQUE_ID = randomUUID({ disableEntropyCache: true });
+    return env;
+  },
 });
 
 const pems = selfsigned.generate(
