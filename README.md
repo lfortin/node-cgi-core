@@ -147,10 +147,11 @@ An updater function can also be passed to the `env` option to update the environ
 ```javascript
 // Example:
 (env, req) => {
-  env.SERVER_ADMIN = "admin@example.com";
-  env.ANOTHER_VAR = "another value";
-  env.VALUE_FROM_REQUEST = req.headers["X-Custom-Header"];
-  return env;
+  return {
+    SERVER_ADMIN: "admin@example.com",
+    ANOTHER_VAR: "another value",
+    VALUE_FROM_REQUEST: req.headers["x-custom-header"],
+  };
 }
 ```
 

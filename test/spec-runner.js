@@ -122,8 +122,9 @@ script.cgi`);
       assert.strictEqual(env.ANOTHER_VAR, "another value");
 
       extraInfo.env = function (env, req) {
-        env.UNIQUE_ID = req.uniqueId;
-        return env;
+        return {
+          UNIQUE_ID: req.uniqueId,
+        };
       };
       env = createEnvObject(req, extraInfo);
       assert.strictEqual(env.UNIQUE_ID, req.uniqueId);
