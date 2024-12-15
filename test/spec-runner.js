@@ -203,6 +203,7 @@ script.cgi`);
         url: "/cgi-bin/script.cgi?param1=test&param2=test",
         method: "GET",
       };
+
       const log = requestLogger(req, 200);
       assert.strictEqual(
         log,
@@ -216,6 +217,7 @@ script.cgi`);
         method: "GET",
       };
       requestLogger(req, 200);
+
       const log = requestLogger(req, 200);
       assert.strictEqual(log, undefined);
     });
@@ -227,9 +229,12 @@ script.cgi`);
         method: "GET",
       };
       requestLogger(req, 200);
+      assert.strictEqual(requestLogger(req, 200), undefined);
+
       for (let i = 0; i <= 1000; i++) {
         requestLogger({}, 200);
       }
+
       const log = requestLogger(req, 200);
       assert.strictEqual(
         log,
