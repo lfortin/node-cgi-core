@@ -21,7 +21,7 @@
 
 import { randomUUID } from "node:crypto";
 import express from "express";
-import { createHandler } from "../cgi-core.js";
+import { createHandler } from "../cgi-core.mjs";
 
 const port = process.env.PORT || 3001;
 

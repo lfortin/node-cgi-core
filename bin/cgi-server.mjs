@@ -24,7 +24,7 @@
 import { createServer } from "node:http";
 import { parseArgs } from "node:util";
 import { randomUUID } from "node:crypto";
-import { createHandler, defaultConfig } from "../cgi-core.js";
+import { createHandler, defaultConfig } from "../cgi-core.mjs";
 
 const options = {
   help: {

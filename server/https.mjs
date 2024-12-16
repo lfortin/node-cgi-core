@@ -22,7 +22,7 @@
 import { createServer } from "node:https";
 import { randomUUID } from "node:crypto";
 import selfsigned from "selfsigned";
-import { createHandler } from "../cgi-core.js";
+import { createHandler } from "../cgi-core.mjs";
 
 const port = process.env.PORT || 3001;
 

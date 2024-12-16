@@ -15,6 +15,12 @@
   "main": "./cgi-core.js",
   "type": "commonjs",
   "types": "./cgi-core.d.ts",
+  "exports": {
+    ".": {
+      "import": "./cgi-core.mjs",
+      "require": "./cgi-core.js"
+    }
+  },
   "bin": {
     "cgi-server": "./bin/cgi-server.mjs"
   },
