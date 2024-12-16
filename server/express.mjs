@@ -19,6 +19,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import { randomUUID } from "node:crypto";
 import express from "express";
 import { createHandler } from "../cgi-core.js";
 
@@ -40,7 +41,24 @@ const config = {
   maxBuffer: 4 * 1024 ** 2,
   requestChunkSize: 4 * 1024,
   responseChunkSize: 4 * 1024,
-  env: { SERVER_PORT: port },
+  env: (env, req) => {
+    return {
+      REMOTE_ADDR:
+        req.headers["x-forwarded-for"] ||
+        req.socket.remoteAddress ||
+        req.connection.remoteAddress,
+      REMOTE_HOST: req.headers["host"],
+      REMOTE_AGENT: req.headers["user-agent"],
+      HTTPS:
+        req.headers["x-forwarded-proto"] === "https" ||
+        req.socket.encrypted ||
+        req.connection.encrypted
+          ? "on"
+          : undefined,
+      SERVER_PORT: port,
+      UNIQUE_ID: randomUUID({ disableEntropyCache: true }),
+    };
+  },
 };
 
 const app = express();

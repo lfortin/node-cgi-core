@@ -44,6 +44,18 @@ const callback = createHandler({
   responseChunkSize: 4 * 1024,
   env: (env, req) => {
     return {
+      REMOTE_ADDR:
+        req.headers["x-forwarded-for"] ||
+        req.socket.remoteAddress ||
+        req.connection.remoteAddress,
+      REMOTE_HOST: req.headers["host"],
+      REMOTE_AGENT: req.headers["user-agent"],
+      HTTPS:
+        req.headers["x-forwarded-proto"] === "https" ||
+        req.socket.encrypted ||
+        req.connection.encrypted
+          ? "on"
+          : undefined,
       SERVER_PORT: port,
       UNIQUE_ID: randomUUID({ disableEntropyCache: true }),
     };

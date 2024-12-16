@@ -23,6 +23,7 @@
 
 import { createServer } from "node:http";
 import { parseArgs } from "node:util";
+import { randomUUID } from "node:crypto";
 import { createHandler, defaultConfig } from "../cgi-core.js";
 
 const options = {
@@ -78,7 +79,24 @@ const port = parseInt(values.port, 10) || 3001;
 const config = {
   ...defaultConfig,
   ...values,
-  env: { SERVER_PORT: port },
+  env: (env, req) => {
+    return {
+      REMOTE_ADDR:
+        req.headers["x-forwarded-for"] ||
+        req.socket.remoteAddress ||
+        req.connection.remoteAddress,
+      REMOTE_HOST: req.headers["host"],
+      REMOTE_AGENT: req.headers["user-agent"],
+      HTTPS:
+        req.headers["x-forwarded-proto"] === "https" ||
+        req.socket.encrypted ||
+        req.connection.encrypted
+          ? "on"
+          : undefined,
+      SERVER_PORT: port,
+      UNIQUE_ID: randomUUID({ disableEntropyCache: true }),
+    };
+  },
 };
 const cgiHandler = createHandler(config);
 
