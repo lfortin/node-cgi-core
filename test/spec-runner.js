@@ -8,6 +8,7 @@ const {
   parseResponse,
   HeaderError,
   getRequestLogger,
+  splitOutput,
 } = require("../lib/util");
 
 const config = {
@@ -178,21 +179,6 @@ script.cgi`);
       assert.ok(bodyContent.match(/forbidden/));
       assert.strictEqual(status, 403);
     });
-    it("should ignore invalid header", async () => {
-      const output = `Content-Type: text/html\nInvalid header
-
-      <html>
-      <body>
-      hello world
-      </body>
-      </html>
-      `;
-
-      const { headers, bodyContent, status } = await parseResponse(output);
-      assert.strictEqual(headers["Content-Type"], "text/html");
-      assert.ok(bodyContent.match(/hello world/));
-      assert.strictEqual(status, undefined);
-    });
     it("should throw if end of headers line is missing", async () => {
       const output = `Content-Type: text/html\n`;
 
@@ -202,9 +188,60 @@ script.cgi`);
         },
         (err) => {
           assert.ok(err instanceof HeaderError);
+          assert.match(err.message, /Missing end of headers line/);
           return true;
         }
       );
+    });
+    it("should throw if invalid header", async () => {
+      const output = `Content-Type: text/html\nInvalid_header
+
+      <html>
+      <body>
+      hello world
+      </body>
+      </html>
+      `;
+
+      await assert.rejects(
+        async () => {
+          await parseResponse(output);
+        },
+        (err) => {
+          assert.ok(err instanceof HeaderError);
+          assert.match(err.message, /not supported header line/);
+          assert.match(err.message, /Invalid_header/);
+          return true;
+        }
+      );
+    });
+  });
+  describe("splitOutput", () => {
+    it("should return 2 buffers using CRLFCRLF", async () => {
+      const output = Buffer.from(
+        `Content-Type: text/plain\r\n\r\nhello world\r\n\r\nhello world`
+      );
+
+      const [first, second] = splitOutput(output);
+      console.log(second.toString());
+      assert.strictEqual(first.toString(), "Content-Type: text/plain");
+      assert.strictEqual(second.toString(), "hello world\r\n\r\nhello world");
+    });
+    it("should return 2 buffers using LFLF", async () => {
+      const output = Buffer.from(
+        `Content-Type: text/plain\n\nhello world\n\nhello world`
+      );
+
+      const [first, second] = splitOutput(output);
+      console.log(second.toString());
+      assert.strictEqual(first.toString(), "Content-Type: text/plain");
+      assert.strictEqual(second.toString(), "hello world\n\nhello world");
+    });
+    it("should return null", async () => {
+      const output = Buffer.from(`Content-Type: text/html`);
+
+      const result = splitOutput(output);
+      assert.strictEqual(result, null);
     });
   });
   describe("getRequestLogger", () => {
