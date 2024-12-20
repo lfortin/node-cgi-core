@@ -7,8 +7,8 @@ const {
   createEnvObject,
   parseResponse,
   HeaderError,
-  getRequestLogger,
   splitOutput,
+  getRequestLogger,
 } = require("../lib/util");
 
 const config = {
