@@ -74,40 +74,35 @@ function createHandler(configOptions = {}) {
 
     req.pause();
 
-    if (parseInt(req.headers["content-length"]) > config.maxBuffer) {
+    if (parseInt(req.headers["content-length"], 10) > config.maxBuffer) {
       terminateRequest(req, res, 413, config);
       return true;
     }
 
     const fullFilePath = resolve(config.filePath, filePath);
+    const execPath = getExecPath(filePath, config.extensions);
+    const fullExecPath = `${execPath ? execPath + " " : ""}${fullFilePath}`;
+    let env;
 
-    // Check file permissions
     try {
       if (!filePath) {
         throw new Error("missing filePath");
       }
+      // Check file permissions
       await access(fullFilePath, constants.F_OK);
       await access(fullFilePath, constants.X_OK);
-    } catch (err) {
-      if (err.code === "ENOENT") {
-        terminateRequest(req, res, 404, config);
-        return true;
-      }
-      errorHandler.apply({ req, res, config }, [err.message]);
-      return true;
-    }
 
-    const execPath = getExecPath(filePath, config.extensions);
-    const fullExecPath = `${execPath ? execPath + " " : ""}${fullFilePath}`;
-
-    let env;
-    try {
+      // Create the environment object
       env = createEnvObject(req, {
         filePath,
         fullFilePath,
         env: config.env,
       });
     } catch (err) {
+      if (err.code === "ENOENT") {
+        terminateRequest(req, res, 404, config);
+        return true;
+      }
       errorHandler.apply({ req, res, config }, [err.message]);
       return true;
     }
