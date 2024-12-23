@@ -79,11 +79,12 @@ script.cgi`);
     it("should return an env object", async () => {
       const req = {
         url: "/cgi-bin/script.cgi/extra/path?param1=test&param2=test",
+        socket: { remoteAddress: "127.0.0.1" },
         headers: {
-          "Content-Type": "application/json",
-          "Content-Length": 1024,
-          Cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
-          Host: "www.example.org",
+          "content-type": "application/json",
+          "content-length": 1024,
+          cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
+          host: "www.example.org",
         },
         method: "GET",
         httpVersion: "1.1",
@@ -119,6 +120,7 @@ script.cgi`);
         env.SCRIPT_FILENAME,
         "/home/username/cgi-bin/files/script.cgi"
       );
+      assert.strictEqual(env.REMOTE_ADDR, "127.0.0.1");
       assert.strictEqual(env.SCRIPT_NAME, "/files/script.cgi");
       assert.strictEqual(env.ANOTHER_VAR, "another value");
 
