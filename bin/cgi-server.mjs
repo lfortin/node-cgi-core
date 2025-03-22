@@ -40,6 +40,15 @@ const options = {
   indexExtension: {
     type: "string",
   },
+  maxBuffer: {
+    type: "string",
+  },
+  requestChunkSize: {
+    type: "string",
+  },
+  responseChunkSize: {
+    type: "string",
+  },
   debugOutput: {
     type: "boolean",
     short: "d",
@@ -68,6 +77,9 @@ if (values.help) {
   --urlPath <urlPath>           Set base url path for routing
   --filePath <filePath>         Set file path where the CGI scripts are located
   --indexExtension <extension>  Set file extension to lookup for index files
+  --maxBuffer <bytes>           Set the allowed HTTP request and response payloads size in bytes
+  --requestChunkSize <bytes>    Set the HTTP request payload data chunks size in bytes
+  --responseChunkSize <bytes>   Set the HTTP response payload data chunks size in bytes
   -d, --debugOutput             Output errors for HTTP status 500
   -l, --logRequests             Log HTTP requests to STDOUT
   -p, --port <port>             Set the port to listen on
