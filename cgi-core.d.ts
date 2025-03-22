@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 
-export const defaultExtensions: Extensions;
-export const defaultConfig: Config;
+export const defaultExtensions: Readonly<Extensions>;
+export const defaultConfig: Readonly<Config>;
 
 export function createHandler(
   configOptions?: Partial<Config>
