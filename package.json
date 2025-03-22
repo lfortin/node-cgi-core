@@ -25,11 +25,11 @@
     "cgi-server": "./bin/cgi-server.mjs"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.15.0"
   },
   "devDependencies": {
     "@types/node": "^22.5.1",
-    "cypress": "^13.14.2",
+    "cypress": "^14.0.0",
     "express": "^4.21.1",
     "mocha": "^11.0.1",
     "nodemon": "^3.1.7",
