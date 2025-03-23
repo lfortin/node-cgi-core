@@ -32,6 +32,8 @@ export interface Config {
   maxBuffer: number;
   requestChunkSize: number;
   responseChunkSize: number;
+  requestTimeout: number;
+  forceKillDelay: number;
   statusPages: StatusPages;
   env: EnvVars | ((env: EnvVars, req: IncomingMessage) => EnvVars);
 }

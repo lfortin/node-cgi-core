@@ -58,6 +58,8 @@ const defaultConfig = {
   maxBuffer: 2 * 1024 ** 2,
   requestChunkSize: 16 * 1024,
   responseChunkSize: 16 * 1024,
+  requestTimeout: 30000,
+  forceKillDelay: 5000,
   statusPages: {},
   env: {},
 };
@@ -107,26 +109,41 @@ function createHandler(configOptions = {}) {
       return true;
     }
 
-    const child = spawn(fullExecPath, {
+    const cgiProcess = spawn(fullExecPath, {
       env,
       shell: true,
       windowsHide: true,
       maxBuffer: config.maxBuffer,
     });
 
-    child.on("close", (code) => {
+    const timeoutId = setTimeout(() => {
+      cgiProcess.kill("SIGTERM");
+      terminateRequest(req, res, 504, config);
+
+      const forceKillTimeoutId = setTimeout(() => {
+        cgiProcess.kill("SIGKILL");
+      }, config.forceKillDelay);
+
+      cgiProcess.on("exit", () => {
+        clearTimeout(forceKillTimeoutId);
+      });
+    }, config.requestTimeout);
+
+    cgiProcess.on("close", (code) => {
+      clearTimeout(timeoutId);
       //console.log(`child process exited with code ${code}`);
     });
-    child.on("error", (error) => {
-      //console.log('error', error);
+    cgiProcess.on("error", (error) => {
+      clearTimeout(timeoutId);
     });
-    child.stderr.on("data", errorHandler.bind({ req, res, config }));
+    cgiProcess.stderr.on("data", errorHandler.bind({ req, res, config }));
 
-    await streamRequestPayload(child, req, config);
-    streamResponsePayload(child, req, res, config);
+    await streamRequestPayload(cgiProcess, req, config);
+    streamResponsePayload(cgiProcess, req, res, config);
 
     res.on("close", () => {
       req.destroy();
+      clearTimeout(timeoutId);
     });
 
     return true;
