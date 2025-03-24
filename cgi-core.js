@@ -109,37 +109,13 @@ function createHandler(configOptions = {}) {
       return true;
     }
 
-    const ac = new AbortController();
-
-    const cgiProcess = spawn(fullExecPath, {
+    const { cgiProcess, ac, timeoutId } = spawnProcess({
+      fullExecPath,
       env,
-      shell: true,
-      windowsHide: true,
-      maxBuffer: config.maxBuffer,
-      signal: ac.signal,
+      config,
+      req,
+      res,
     });
-
-    const timeoutId = setTimeout(() => {
-      ac.abort();
-      terminateRequest(req, res, 504, config);
-
-      const forceKillTimeoutId = setTimeout(() => {
-        cgiProcess.kill("SIGKILL");
-      }, config.forceKillDelay);
-
-      cgiProcess.on("exit", () => {
-        clearTimeout(forceKillTimeoutId);
-      });
-    }, config.requestTimeout);
-
-    cgiProcess.on("close", (code) => {
-      clearTimeout(timeoutId);
-      //console.log(`child process exited with code ${code}`);
-    });
-    cgiProcess.on("error", (error) => {
-      clearTimeout(timeoutId);
-    });
-    cgiProcess.stderr.on("data", errorHandler.bind({ req, res, config }));
 
     await streamRequestPayload(cgiProcess, req, config);
     streamResponsePayload(cgiProcess, req, res, config);
@@ -152,6 +128,44 @@ function createHandler(configOptions = {}) {
 
     return true;
   };
+}
+
+function spawnProcess(params) {
+  const { fullExecPath, env, config, req, res } = params;
+
+  const ac = new AbortController();
+
+  const cgiProcess = spawn(fullExecPath, {
+    env,
+    shell: true,
+    windowsHide: true,
+    maxBuffer: config.maxBuffer,
+    signal: ac.signal,
+  });
+
+  const timeoutId = setTimeout(() => {
+    ac.abort();
+    terminateRequest(req, res, 504, config);
+
+    const forceKillTimeoutId = setTimeout(() => {
+      cgiProcess.kill("SIGKILL");
+    }, config.forceKillDelay);
+
+    cgiProcess.on("exit", () => {
+      clearTimeout(forceKillTimeoutId);
+    });
+  }, config.requestTimeout);
+
+  cgiProcess.on("close", (code) => {
+    clearTimeout(timeoutId);
+    //console.log(`child process exited with code ${code}`);
+  });
+  cgiProcess.on("error", (error) => {
+    clearTimeout(timeoutId);
+  });
+  cgiProcess.stderr.on("data", errorHandler.bind({ req, res, config }));
+
+  return { cgiProcess, ac, timeoutId };
 }
 
 module.exports = {
