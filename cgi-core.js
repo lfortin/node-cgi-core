@@ -109,15 +109,18 @@ function createHandler(configOptions = {}) {
       return true;
     }
 
+    const ac = new AbortController();
+
     const cgiProcess = spawn(fullExecPath, {
       env,
       shell: true,
       windowsHide: true,
       maxBuffer: config.maxBuffer,
+      signal: ac.signal,
     });
 
     const timeoutId = setTimeout(() => {
-      cgiProcess.kill("SIGTERM");
+      ac.abort();
       terminateRequest(req, res, 504, config);
 
       const forceKillTimeoutId = setTimeout(() => {
@@ -142,6 +145,7 @@ function createHandler(configOptions = {}) {
     streamResponsePayload(cgiProcess, req, res, config);
 
     res.on("close", () => {
+      ac.abort();
       req.destroy();
       clearTimeout(timeoutId);
     });
