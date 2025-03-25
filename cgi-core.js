@@ -67,6 +67,13 @@ const defaultConfig = {
 function createHandler(configOptions = {}) {
   const config = { ...defaultConfig, ...configOptions };
 
+  if (config.requestChunkSize > config.maxBuffer) {
+    throw new Error(`requestChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`);
+  }
+  if (config.responseChunkSize > config.maxBuffer) {
+    throw new Error(`responseChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`);
+  }
+
   return async function (req, res) {
     const filePath = getUrlFilePath(req.url, config);
 
