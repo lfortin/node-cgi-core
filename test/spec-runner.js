@@ -22,8 +22,8 @@ const config = {
   indexExtension: "js",
   debugOutput: false,
   maxBuffer: 2 * 1024 ** 2,
-  requestChunkSize: 16 * 1024,
-  responseChunkSize: 16 * 1024,
+  requestChunkSize: 32 * 1024,
+  responseChunkSize: 32 * 1024,
 };
 
 describe("cgi-core", () => {

@@ -56,10 +56,10 @@ const defaultConfig = {
   debugOutput: false,
   logRequests: false,
   maxBuffer: 2 * 1024 ** 2,
-  requestChunkSize: 16 * 1024,
-  responseChunkSize: 16 * 1024,
+  requestChunkSize: 32 * 1024,
+  responseChunkSize: 32 * 1024,
   requestTimeout: 30000,
-  forceKillDelay: 5000,
+  forceKillDelay: 1000,
   statusPages: {},
   env: {},
 };

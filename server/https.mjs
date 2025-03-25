@@ -42,6 +42,7 @@ const callback = createHandler({
   maxBuffer: 4 * 1024 ** 2,
   requestChunkSize: 4 * 1024,
   responseChunkSize: 4 * 1024,
+  requestTimeout: 30000,
   env: (env, req) => {
     return {
       REMOTE_AGENT: req.headers["user-agent"],
