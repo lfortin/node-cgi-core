@@ -111,11 +111,11 @@ Size of the allowed HTTP request and response payloads in bytes. Default: `2 * 1
 
 ### requestChunkSize
 
-Size of the HTTP request payload data chunks in bytes. Default: `32 * 1024` (32 KB)
+Size of the HTTP request payload data chunks in bytes, used for internal buffering when reading request data. Default: `32 * 1024` (32 KB)
 
 ### responseChunkSize
 
-Size of the HTTP response payload data chunks in bytes. Default: `32 * 1024` (32 KB)
+Size of the HTTP response payload data chunks in bytes, applicable when `Transfer-Encoding: chunked` is used. If `Content-Length` is set, chunking is disabled, and the response is sent as a single block. Default: `32 * 1024` (32 KB)
 
 ### requestTimeout
 
