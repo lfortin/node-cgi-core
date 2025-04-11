@@ -67,6 +67,26 @@ const defaultConfig = {
 function createHandler(configOptions = {}) {
   const config = { ...defaultConfig, ...configOptions };
 
+  // Coerce numeric config options
+  const numericKeys = [
+    "maxBuffer",
+    "requestChunkSize",
+    "responseChunkSize",
+    "requestTimeout",
+    "forceKillDelay",
+  ];
+
+  for (const key of numericKeys) {
+    const value = configOptions[key];
+    if (value !== undefined) {
+      const coerced = Number(value);
+      if (Number.isNaN(coerced)) {
+        throw new Error(`Invalid number for config.${key}`);
+      }
+      config[key] = coerced;
+    }
+  }
+
   if (config.requestChunkSize > config.maxBuffer) {
     throw new Error(`requestChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`);
   }
