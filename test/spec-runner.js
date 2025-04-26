@@ -135,54 +135,54 @@ script.cgi`);
   });
   describe("parseResponse", () => {
     it("should return a parsed response", async () => {
-      const output = `Content-Type: text/html\nSet-Cookie: yummy_cookie=choco
+      const output = Buffer.from(`Content-Type: text/html\nSet-Cookie: yummy_cookie=choco
 
       <html>
       <body>
       hello world
       </body>
       </html>
-      `;
+      `);
 
       const { headers, bodyContent, status } = await parseResponse(output);
       assert.strictEqual(headers["Content-Type"], "text/html");
       assert.strictEqual(headers["Set-Cookie"], "yummy_cookie=choco");
-      assert.ok(bodyContent.match(/hello world/));
+      assert.ok(bodyContent.toString().match(/hello world/));
       assert.strictEqual(status, undefined);
     });
     it("should return a parsed response with a status header", async () => {
       let output, headers, bodyContent, status;
 
-      output = `HTTP/1.1 403 Forbidden\nContent-Type: text/html
+      output = Buffer.from(`HTTP/1.1 403 Forbidden\nContent-Type: text/html
 
       <html>
       <body>
       forbidden
       </body>
       </html>
-      `;
+      `);
 
       ({ headers, bodyContent, status } = await parseResponse(output));
       assert.strictEqual(headers["Content-Type"], "text/html");
-      assert.ok(bodyContent.match(/forbidden/));
+      assert.ok(bodyContent.toString().match(/forbidden/));
       assert.strictEqual(status, 403);
 
-      output = `Content-Type: text/html\nStatus: 403 Forbidden
+      output = Buffer.from(`Content-Type: text/html\nStatus: 403 Forbidden
 
       <html>
       <body>
       forbidden
       </body>
       </html>
-      `;
+      `);
 
       ({ headers, bodyContent, status } = await parseResponse(output));
       assert.strictEqual(headers["Content-Type"], "text/html");
-      assert.ok(bodyContent.match(/forbidden/));
+      assert.ok(bodyContent.toString().match(/forbidden/));
       assert.strictEqual(status, 403);
     });
     it("should throw if end of headers line is missing", async () => {
-      const output = `Content-Type: text/html\n`;
+      const output = Buffer.from("Content-Type: text/html\n");
 
       await assert.rejects(
         async () => {
@@ -196,14 +196,14 @@ script.cgi`);
       );
     });
     it("should throw if invalid header", async () => {
-      const output = `Content-Type: text/html\nInvalid_header
+      const output = Buffer.from(`Content-Type: text/html\nInvalid_header
 
       <html>
       <body>
       hello world
       </body>
       </html>
-      `;
+      `);
 
       await assert.rejects(
         async () => {
