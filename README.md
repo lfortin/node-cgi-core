@@ -180,6 +180,7 @@ npx cgi-server --port 3001 --urlPath /cgi-bin --filePath ./cgi-bin
 
 ```
   -h, --help                    Display help
+  -v, --version                 Display cgi-core version string
   --urlPath <urlPath>           Set base url path for routing
   --filePath <filePath>         Set file path where the CGI scripts are located
   --indexExtension <extension>  Set file extension to lookup for index files

@@ -24,12 +24,20 @@
 import { createServer } from "node:http";
 import { parseArgs } from "node:util";
 import { randomUUID } from "node:crypto";
+import { createRequire } from "node:module";
 import { createHandler, defaultConfig } from "../cgi-core.mjs";
+
+const require = createRequire(import.meta.url);
+const { version } = require("../package.json");
 
 const options = {
   help: {
     type: "boolean",
     short: "h",
+  },
+  version: {
+    type: "boolean",
+    short: "v",
   },
   urlPath: {
     type: "string",
@@ -76,7 +84,10 @@ try {
 
 if (values.help) {
   console.log(`
+  cgi-server (cgi-core v${version}). Released under the MIT License.
+
   -h, --help                    Display help
+  -v, --version                 Display cgi-core version string
   --urlPath <urlPath>           Set base url path for routing
   --filePath <filePath>         Set file path where the CGI scripts are located
   --indexExtension <extension>  Set file extension to lookup for index files
@@ -90,6 +101,12 @@ if (values.help) {
     `);
   process.exit();
 }
+
+if (values.version) {
+  console.log(`v${version}`);
+  process.exit();
+}
+
 const port = parseInt(values.port, 10) || 3001;
 
 const config = {
