@@ -6,7 +6,7 @@
 cgi-core
 </h1>
 <p align="center">
-A minimalistic, zero-dependency wrapper for hosting <a href="https://github.com/lfortin/node-cgi-core/blob/master/sample-scripts.md">CGI scripts</a> with HTTP/1.1 support.<br>
+A minimalistic, zero-dependency wrapper for hosting <a href="https://github.com/lfortin/node-cgi-core/blob/master/docs/sample-scripts.md">CGI scripts</a> with HTTP/1.1 support.<br>
 <br>
 Released under the <a href="https://opensource.org/license/mit">MIT License</a>.
 </p>
@@ -60,7 +60,7 @@ const app = createServer(async (req, res) => {
 app.listen(3000);
 ```
 
-Usage example using [Express](https://github.com/lfortin/node-cgi-core/blob/master/express.md).
+Usage example using [Express](https://github.com/lfortin/node-cgi-core/blob/master/docs/express.md).
 
 # Configuration options
 
