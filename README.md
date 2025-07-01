@@ -13,6 +13,16 @@ Released under the <a href="https://opensource.org/license/mit">MIT License</a>.
 
 [![Node.js (install and test)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml/badge.svg?event=push)](https://github.com/lfortin/node-cgi-core/actions/workflows/node.js.yml)
 
+## Features
+
+- ⚡ Zero dependency — no external packages required
+- 🌐 Full HTTP/1.1 support
+- 🧩 Simple middleware for handling CGI routes
+- 🛠️ Run from the CLI or embed directly in Node.js apps
+- ⚙️ Supports CGI scripts in any language (Perl, Python, Bash, Node.js, etc.)
+- 🔧 Fully configurable: timeouts, chunk sizes, environment variables, and more
+- 📜 Custom error/status pages per HTTP status code
+
 ## Getting Started
 
 Install the latest stable version of `cgi-core`:
