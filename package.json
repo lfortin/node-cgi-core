@@ -46,7 +46,13 @@
   },
   "keywords": [
     "cgi",
-    "http"
+    "cgi-bin",
+    "cgi-server",
+    "http",
+    "http-server",
+    "middleware",
+    "server",
+    "zero-dependency"
   ],
   "license": "MIT"
 }
