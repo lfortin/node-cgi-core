@@ -10,6 +10,7 @@ const {
   splitOutput,
   getRequestLogger,
 } = require("../lib/util");
+const { version } = require("../package.json");
 
 const config = {
   urlPath: "/cgi-bin",
@@ -115,7 +116,10 @@ script.cgi`);
         "/cgi-bin/script.cgi/extra/path?param1=test&param2=test"
       );
       assert.strictEqual(env.SERVER_PROTOCOL, "HTTP/1.1");
-      assert.strictEqual(env.SERVER_SOFTWARE, `Node.js/${process.version}`);
+      assert.strictEqual(
+        env.SERVER_SOFTWARE,
+        `Node.js/${process.version} (cgi-core/v${version})`
+      );
       assert.strictEqual(
         env.SCRIPT_FILENAME,
         "/home/username/cgi-bin/files/script.cgi"
@@ -135,7 +139,8 @@ script.cgi`);
   });
   describe("parseResponse", () => {
     it("should return a parsed response", async () => {
-      const output = Buffer.from(`Content-Type: text/html\nSet-Cookie: yummy_cookie=choco
+      const output =
+        Buffer.from(`Content-Type: text/html\nSet-Cookie: yummy_cookie=choco
 
       <html>
       <body>
