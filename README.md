@@ -222,6 +222,68 @@ SERVER_PROTOCOL
 SERVER_SOFTWARE
 ```
 
+# 🔁 Using a Reverse Proxy (e.g., Nginx)
+
+While `cgi-core` is capable of serving CGI scripts directly over HTTP/1.1, it's often recommended to use a **reverse proxy** like **Nginx** in front of your Node.js server for:
+
+- Improved performance via caching
+- Better static asset delivery
+- TLS termination and header management
+- Simplified load balancing or security
+
+### Example: `nginx.conf`
+
+Below is an example Nginx configuration that:
+
+- Proxies `/cgi-bin` requests to the Node.js/`cgi-core` server running on `localhost:3001`
+- Enables **caching** for `GET` responses
+- Serves static assets directly from the filesystem with browser caching
+
+```nginx
+worker_processes 1;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=STATIC:10m max_size=100m inactive=60m use_temp_path=off;
+
+  server {
+    listen      3002;
+    server_name 127.0.0.1;
+
+    # Proxy CGI requests and enable caching
+    location /cgi-bin {
+      proxy_pass http://127.0.0.1:3001;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+
+      proxy_cache STATIC;
+      proxy_cache_methods GET;
+      proxy_cache_key "$scheme$request_method$host$request_uri";
+      proxy_cache_valid 200 302 10m;
+      proxy_cache_valid 404 1m;
+      add_header X-Proxy-Cache $upstream_cache_status;
+    }
+
+    # Serve static files and enable browser caching
+    location / {
+      root /path/to/your/htdocs;
+      index index.htm index.html;
+
+      location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|woff2?)$ {
+        expires 30d;
+        add_header Cache-Control "public";
+        access_log off;
+      }
+    }
+  }
+}
+```
+
 # License
 
 `cgi-core` is released under the [MIT License](https://github.com/lfortin/node-cgi-core/blob/master/LICENSE).
