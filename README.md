@@ -22,6 +22,7 @@ Released under the <a href="https://opensource.org/license/mit">MIT License</a>.
 - ⚙️ Supports CGI scripts in any language (Perl, Python, Bash, Node.js, etc.)
 - 🔧 Fully configurable: timeouts, chunk sizes, environment variables, and more
 - 📜 Custom error/status pages per HTTP status code
+- 🛡️ Built-in path sanitization and error handling for safer execution
 
 ## Getting Started
 
