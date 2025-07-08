@@ -53,8 +53,8 @@ describe("cgi-core", () => {
   });
   describe("sanitizePath", () => {
     it("should remove '..' from the path", async () => {
-      const path = sanitizePath("../cgi-bin/");
-      assert.strictEqual(path, "/cgi-bin/");
+      const path = sanitizePath("../../.../cgi-bin/");
+      assert.strictEqual(path, "/./cgi-bin/");
     });
     it("should remove CRLF from the path", async () => {
       const path = sanitizePath(`/cgi-bin/
