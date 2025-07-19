@@ -21,7 +21,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { createServer } from "node:http";
+import { createServer, STATUS_CODES } from "node:http";
 import { parseArgs } from "node:util";
 import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
@@ -71,6 +71,9 @@ const options = {
   port: {
     type: "string",
     short: "p",
+  },
+  teapot: {
+    type: "boolean",
   },
 };
 
@@ -133,6 +136,20 @@ const app = createServer(async (req, res) => {
 
   if (!requestHandled) {
     // here, handle any routing outside of urlPath
+
+    if (config.teapot && req.url === "/teapot") {
+      res.writeHead(418, { "Content-Type": "text/html" });
+      res.end(`
+        <html>
+          <body style="font-family: sans-serif; text-align: center; margin-top: 5rem;">
+            <h1>&#x1FAD6; 418: I'm a Teapot</h1>
+            <p>This server refuses to brew coffee.</p>
+          </body>
+        </html>
+      `);
+      return;
+    }
+
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end(`outside of url path ${config.urlPath}`);
   }
