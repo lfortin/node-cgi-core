@@ -6,7 +6,7 @@
 cgi-core
 </h1>
 <p align="center">
-A lightweight, zero-dependency middleware for hosting <a href="https://github.com/lfortin/node-cgi-core/blob/master/docs/sample-scripts.md">CGI scripts</a> with HTTP/1.1 support.<br>
+A lightweight, zero-dependency middleware for hosting <a href="https://github.com/lfortin/node-cgi-core/blob/master/docs/sample-scripts.md">CGI scripts</a> with HTTP/1.1 support. Aims to support The Common Gateway Interface (CGI) Version 1.1 as defined in <a href="https://www.ietf.org/rfc/rfc3875.txt">RFC 3875</a>.<br>
 <br>
 Released under the <a href="https://opensource.org/license/mit">MIT License</a>.
 </p>

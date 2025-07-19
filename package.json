@@ -51,6 +51,7 @@
     "http",
     "http-server",
     "middleware",
+    "rfc3875",
     "server",
     "zero-dependency"
   ],
