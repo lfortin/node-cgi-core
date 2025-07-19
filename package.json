@@ -1,7 +1,7 @@
 {
   "name": "cgi-core",
   "description": "Lightweight, zero-dependency middleware for hosting CGI scripts with HTTP/1.1 support",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "homepage": "https://github.com/lfortin/node-cgi-core#readme",
   "repository": {
     "type": "git",
