@@ -80,12 +80,16 @@ script.cgi`);
     it("should return an env object", async () => {
       const req = {
         url: "/cgi-bin/script.cgi/extra/path?param1=test&param2=test",
-        socket: { remoteAddress: "127.0.0.1" },
+        socket: {
+          remoteAddress: "127.0.0.1",
+          localAddress: "127.0.0.1",
+          localPort: 3001,
+        },
         headers: {
           "content-type": "application/json",
           "content-length": 1024,
           cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
-          host: "www.example.org",
+          authorization: "Bearer [token]",
         },
         method: "GET",
         httpVersion: "1.1",
@@ -106,7 +110,6 @@ script.cgi`);
         env.HTTP_COOKIE,
         "yummy_cookie=choco; tasty_cookie=strawberry"
       );
-      assert.strictEqual(env.HTTP_HOST, "www.example.org");
       assert.strictEqual(env.QUERY_STRING, "param1=test&param2=test");
       assert.strictEqual(env.REQUEST_METHOD, "GET");
       assert.strictEqual(env.PATH, process.env.PATH);
@@ -125,6 +128,9 @@ script.cgi`);
         "/home/username/cgi-bin/files/script.cgi"
       );
       assert.strictEqual(env.REMOTE_ADDR, "127.0.0.1");
+      assert.strictEqual(env.SERVER_PORT, 3001);
+      assert.strictEqual(env.SERVER_NAME, "127.0.0.1");
+      assert.strictEqual(env.AUTH_TYPE, "Bearer");
       assert.strictEqual(env.SCRIPT_NAME, "/files/script.cgi");
       assert.strictEqual(env.ANOTHER_VAR, "another value");
 
@@ -133,7 +139,15 @@ script.cgi`);
           UNIQUE_ID: req.uniqueId,
         };
       };
+      req.headers["x-forwarded-for"] = "127.0.0.1";
+      req.headers["x-forwarded-proto"] = "https";
+      req.headers["host"] = "www.example.org:3001";
       env = createEnvObject(req, extraInfo);
+      assert.strictEqual(env.HTTP_HOST, "www.example.org:3001");
+      assert.strictEqual(env.REMOTE_ADDR, "127.0.0.1");
+      assert.strictEqual(env.SERVER_PORT, 3001);
+      assert.strictEqual(env.SERVER_NAME, "www.example.org");
+      assert.strictEqual(env.HTTPS, "on");
       assert.strictEqual(env.UNIQUE_ID, req.uniqueId);
     });
   });
@@ -230,7 +244,6 @@ script.cgi`);
       );
 
       const [first, second] = splitOutput(output);
-      console.log(second.toString());
       assert.strictEqual(first.toString(), "Content-Type: text/plain");
       assert.strictEqual(second.toString(), "hello world\r\n\r\nhello world");
     });
@@ -240,7 +253,6 @@ script.cgi`);
       );
 
       const [first, second] = splitOutput(output);
-      console.log(second.toString());
       assert.strictEqual(first.toString(), "Content-Type: text/plain");
       assert.strictEqual(second.toString(), "hello world\n\nhello world");
     });
