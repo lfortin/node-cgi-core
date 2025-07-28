@@ -21,7 +21,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { createServer, STATUS_CODES } from "node:http";
+import { createServer } from "node:http";
 import { parseArgs } from "node:util";
 import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
