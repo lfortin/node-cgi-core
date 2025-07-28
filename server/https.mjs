@@ -46,7 +46,7 @@ const callback = createHandler({
   env: (env, req) => {
     return {
       REMOTE_AGENT: req.headers["user-agent"],
-      UNIQUE_ID: randomUUID({ disableEntropyCache: true }),
+      UNIQUE_ID: randomUUID(),
     };
   },
 });
