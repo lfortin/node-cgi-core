@@ -34,7 +34,7 @@
     "mocha": "^11.0.1",
     "nodemon": "^3.1.7",
     "nyc": "^17.0.0",
-    "selfsigned": "^2.4.1"
+    "selfsigned": "^3.0.1"
   },
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha test/**/*.js",
