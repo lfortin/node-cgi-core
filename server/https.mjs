@@ -46,13 +46,6 @@ const callback = createHandler({
   env: (env, req) => {
     return {
       REMOTE_AGENT: req.headers["user-agent"],
-      HTTPS:
-        req.headers["x-forwarded-proto"] === "https" ||
-        req.socket.encrypted ||
-        req.connection.encrypted
-          ? "on"
-          : undefined,
-      SERVER_PORT: port,
       UNIQUE_ID: randomUUID({ disableEntropyCache: true }),
     };
   },

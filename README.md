@@ -209,8 +209,11 @@ npx cgi-server --port 3001 --urlPath /cgi-bin --filePath ./cgi-bin
 In addition to the standard HTTP-related variables, the following CGI environment variables are supported:
 
 ```
+AUTH_TYPE
 CONTENT_LENGTH
 CONTENT_TYPE
+GATEWAY_INTERFACE
+HTTPS
 PATH
 PATH_INFO
 QUERY_STRING
@@ -219,6 +222,8 @@ REQUEST_METHOD
 REQUEST_URI
 SCRIPT_FILENAME
 SCRIPT_NAME
+SERVER_NAME
+SERVER_PORT
 SERVER_PROTOCOL
 SERVER_SOFTWARE
 ```
@@ -286,6 +291,20 @@ http {
   }
 }
 ```
+
+### ⚠️ Note on Proxy Headers and CGI Environment Variables
+
+If you run `cgi-core` behind a reverse proxy (such as **Nginx**), certain CGI environment variables may be influenced by proxy headers, including:
+
+- `REMOTE_ADDR` — may reflect the proxy's IP unless `X-Forwarded-For` is set
+- `HTTPS` — determined by `X-Forwarded-Proto` if TLS is terminated at the proxy
+- `SERVER_NAME` — usually derived from the `Host` header sent by the proxy
+
+By default, `cgi-core` **does not validate proxy headers**. If untrusted clients can set headers like `X-Forwarded-For`, this could result in spoofed values being passed to your CGI scripts.
+
+🔐 **Important**: Make sure your reverse proxy is properly configured and only accepts requests from trusted sources. If needed, filter or overwrite proxy headers before they reach your Node.js server.
+
+_You may choose to implement your own logic for handling trusted proxies or wait for future support of a `trustProxy` option._
 
 # License
 
