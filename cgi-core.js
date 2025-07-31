@@ -60,6 +60,7 @@ const defaultConfig = {
   responseChunkSize: 32 * 1024,
   requestTimeout: 30000,
   forceKillDelay: 1000,
+  requireExecBit: false,
   statusPages: {},
   env: {},
 };
@@ -88,10 +89,14 @@ function createHandler(configOptions = {}) {
   }
 
   if (config.requestChunkSize > config.maxBuffer) {
-    throw new Error(`requestChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`);
+    throw new Error(
+      `requestChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`
+    );
   }
   if (config.responseChunkSize > config.maxBuffer) {
-    throw new Error(`responseChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`);
+    throw new Error(
+      `responseChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`
+    );
   }
 
   return async function (req, res) {
@@ -119,7 +124,9 @@ function createHandler(configOptions = {}) {
       }
       // Check file permissions
       await access(fullFilePath, constants.F_OK);
-      await access(fullFilePath, constants.X_OK);
+      if (config.requireExecBit || !execPath) {
+        await access(fullFilePath, constants.X_OK);
+      }
 
       // Create the environment object
       env = createEnvObject(req, {
@@ -130,6 +137,11 @@ function createHandler(configOptions = {}) {
     } catch (err) {
       if (err.code === "ENOENT") {
         terminateRequest(req, res, 404, config);
+        return true;
+      }
+      if (err.code === "EACCES") {
+        const message = "File is not executable.";
+        errorHandler.apply({ req, res, config }, [message]);
         return true;
       }
       errorHandler.apply({ req, res, config }, [err.message]);

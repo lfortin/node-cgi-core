@@ -34,6 +34,7 @@ export interface Config {
   responseChunkSize: number;
   requestTimeout: number;
   forceKillDelay: number;
+  requireExecBit: boolean;
   statusPages: StatusPages;
   env: EnvVars | ((env: EnvVars, req: IncomingMessage) => EnvVars);
 }
