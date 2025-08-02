@@ -35,7 +35,7 @@ const config = {
     "/bin/bash": ["sh"],
     "/usr/local/bin/node": ["js", "node"],
   },
-  indexExtension: "js",
+  indexExtension: "cgi",
   debugOutput: true,
   logRequests: true,
   maxBuffer: 4 * 1024 ** 2,
