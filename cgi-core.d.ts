@@ -3,9 +3,11 @@ import { IncomingMessage, ServerResponse } from "node:http";
 export const defaultExtensions: Readonly<Extensions>;
 export const defaultConfig: Readonly<Config>;
 
-export function createHandler(
-  configOptions?: Partial<Config>
-): (req: IncomingMessage, res: ServerResponse) => Promise<boolean>;
+export interface Handler {
+  (req: IncomingMessage, res: ServerResponse): Promise<boolean>;
+}
+
+export function createHandler(configOptions?: Partial<Config>): Handler;
 
 export interface Extensions {
   [key: string]: Array<string>;
@@ -22,6 +24,10 @@ export interface EnvVars {
   [key: string]: string | number | boolean;
 }
 
+export interface EnvUpdaterFunction {
+  (env: EnvVars, req: IncomingMessage): EnvVars;
+}
+
 export interface Config {
   urlPath: string;
   filePath: string;
@@ -36,5 +42,5 @@ export interface Config {
   forceKillDelay: number;
   requireExecBit: boolean;
   statusPages: StatusPages;
-  env: EnvVars | ((env: EnvVars, req: IncomingMessage) => EnvVars);
+  env: EnvVars | EnvUpdaterFunction;
 }

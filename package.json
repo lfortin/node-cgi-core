@@ -18,7 +18,8 @@
   "exports": {
     ".": {
       "import": "./cgi-core.mjs",
-      "require": "./cgi-core.js"
+      "require": "./cgi-core.js",
+      "types": "./cgi-core.d.ts"
     }
   },
   "bin": {
