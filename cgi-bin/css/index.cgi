@@ -26,11 +26,12 @@ use warnings;
 use CGI qw(:standard);
 use File::Spec;
 use File::Basename;
-use FindBin;
 use URI::Escape;
 
-# Get the directory the script is in (filesystem)
-my $script_dir = $FindBin::Bin;
+# Use SCRIPT_FILENAME environment variable to get script directory
+my $script_path = $ENV{'SCRIPT_FILENAME'}
+    or die "SCRIPT_FILENAME environment variable is not set.";
+my $script_dir = dirname($script_path);
 
 my $web_base_url = "/cgi-bin";
 # Get the current script's URL path
