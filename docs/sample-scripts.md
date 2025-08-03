@@ -128,4 +128,65 @@ if ($cgi->param('uploaded_file')) {
 1;
 ```
 
+## Script 5: Directory Listing
+
+This script demonstrates how to list the contents of the current directory.
+
+```perl
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use CGI qw(:standard);
+use File::Spec;
+use File::Basename;
+use URI::Escape;
+
+# Use SCRIPT_FILENAME environment variable to get script directory
+my $script_path = $ENV{'SCRIPT_FILENAME'}
+    or die "SCRIPT_FILENAME environment variable is not set.";
+my $script_dir = dirname($script_path);
+
+my $web_base_url = "/cgi-bin";
+# Get the current script's URL path
+my $script_url_path = $ENV{'SCRIPT_NAME'};
+$script_url_path =~ s/[^\/]+$//;  # Remove script filename, keep path prefix
+# prepend "/cgi-bin/" to the path
+$script_url_path = $web_base_url . $script_url_path;
+
+print header(-type => 'text/html; charset=UTF-8');
+print start_html("Directory Listing");
+print h1("Files and Folders in $script_dir");
+
+opendir(my $dh, $script_dir) or die "Cannot open directory $script_dir: $!";
+my @items = grep { $_ ne '.' && $_ ne '..' } readdir($dh);
+closedir($dh);
+
+if (@items) {
+    print ul(
+        map {
+            my $full_path = File::Spec->catfile($script_dir, $_);
+            my $encoded   = uri_escape($_);
+            my $label     = $_;
+            my $is_dir    = -d $full_path;
+
+            # Create the correct URL pointing to the file or folder
+            my $href = $script_url_path . $encoded;
+            $href .= '/' if $is_dir;
+
+            li(
+                a({ href => $href, target => '_blank' }, $label)
+                . ($is_dir ? " [DIR]" : "")
+            );
+        } sort @items
+    );
+} else {
+    print p("No files or directories found.");
+}
+
+print end_html;
+
+1;
+```
+
 Feel free to modify and test these scripts in your CGI environment!
