@@ -24,6 +24,16 @@ Released under the <a href="https://opensource.org/license/mit">MIT License</a>.
 - 📜 Custom error/status pages per HTTP status code
 - 🛡️ Built-in path sanitization and error handling for safer execution
 
+## Why cgi-core?
+
+Use `cgi-core` when you need:
+
+- ✅ **A quick, local solution for hosting CGI scripts** — Ideal for development environments or testing legacy scripts without setting up a full web server.
+- 🚀 **An alternative to Apache for CGI hosting** — Lightweight and easier to configure, especially when you don’t need the full overhead of traditional web servers.
+- 🔗 **Seamless integration of legacy CGI scripts in modern Node.js apps** — Embed CGI support directly in a Node.js or Express HTTP server, without external dependencies.
+
+Whether you're debugging old Perl or Python scripts, prototyping a local CGI tool, or maintaining legacy infrastructure, `cgi-core` gives you a simple, modern, and flexible way to run CGI — all in pure Node.js.
+
 ## Getting Started
 
 Install the latest stable version of `cgi-core`:
