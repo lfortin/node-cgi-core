@@ -34,50 +34,17 @@ const {
   streamRequestPayload,
   streamResponsePayload,
 } = require("./lib/wrapper");
-
-const defaultExtensions =
-  process.platform === "win32"
-    ? {
-        perl: ["pl", "cgi"],
-        python: ["py"],
-        node: ["js", "node"],
-      }
-    : {
-        "/usr/bin/perl": ["pl", "cgi"],
-        "/usr/bin/python": ["py"],
-        "/usr/local/bin/node": ["js", "node"],
-      };
-
-const defaultConfig = {
-  urlPath: "/cgi-bin",
-  filePath: process.cwd(),
-  extensions: defaultExtensions,
-  indexExtension: "js",
-  debugOutput: false,
-  logRequests: false,
-  maxBuffer: 2 * 1024 ** 2,
-  requestChunkSize: 32 * 1024,
-  responseChunkSize: 32 * 1024,
-  requestTimeout: 30000,
-  forceKillDelay: 1000,
-  requireExecBit: false,
-  statusPages: {},
-  env: {},
-};
+const {
+  DEFAULT_EXTENSIONS,
+  DEFAULT_CONFIG,
+  NUMERIC_CONFIG_KEYS,
+} = require("./lib/constants");
 
 function createHandler(configOptions = {}) {
-  const config = { ...defaultConfig, ...configOptions };
+  const config = { ...DEFAULT_CONFIG, ...configOptions };
 
   // Coerce numeric config options
-  const numericKeys = [
-    "maxBuffer",
-    "requestChunkSize",
-    "responseChunkSize",
-    "requestTimeout",
-    "forceKillDelay",
-  ];
-
-  for (const key of numericKeys) {
+  for (const key of NUMERIC_CONFIG_KEYS) {
     const value = configOptions[key];
     if (value !== undefined) {
       const coerced = Number(value);
@@ -208,7 +175,7 @@ function spawnProcess(params) {
 }
 
 module.exports = {
-  defaultExtensions,
-  defaultConfig,
+  defaultExtensions: DEFAULT_EXTENSIONS,
+  defaultConfig: DEFAULT_CONFIG,
   createHandler,
 };
