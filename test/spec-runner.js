@@ -66,6 +66,8 @@ script.cgi`);
       assert.strictEqual(path, "files\\script.cgi");
       path = sanitizePath("D:\\files\\script.cgi");
       assert.strictEqual(path, "files\\script.cgi");
+      path = sanitizePath("c:/files/script.cgi");
+      assert.strictEqual(path, "files/script.cgi");
     });
     it("should collapse multiple slashes into one", async () => {
       const path = sanitizePath("files///");
