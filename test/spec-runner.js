@@ -53,17 +53,31 @@ describe("cgi-core", () => {
   });
   describe("sanitizePath", () => {
     it("should remove '..' from the path", async () => {
-      const path = sanitizePath("../../.../cgi-bin/");
-      assert.strictEqual(path, "/./cgi-bin/");
+      const path = sanitizePath("../../.../files/");
+      assert.strictEqual(path, "./files/");
     });
     it("should remove CRLF from the path", async () => {
-      const path = sanitizePath(`/cgi-bin/
+      const path = sanitizePath(`files/
 script.cgi`);
-      assert.strictEqual(path, "/cgi-bin/script.cgi");
+      assert.strictEqual(path, "files/script.cgi");
+    });
+    it("should remove leading drive letter", async () => {
+      let path = sanitizePath("C:\\files\\script.cgi");
+      assert.strictEqual(path, "files\\script.cgi");
+      path = sanitizePath("D:\\files\\script.cgi");
+      assert.strictEqual(path, "files\\script.cgi");
     });
     it("should collapse multiple slashes into one", async () => {
-      const path = sanitizePath("//cgi-bin///");
-      assert.strictEqual(path, "/cgi-bin/");
+      const path = sanitizePath("files///");
+      assert.strictEqual(path, "files/");
+    });
+    it("should collapse multiple backslashes into one", async () => {
+      const path = sanitizePath("files\\\\");
+      assert.strictEqual(path, "files\\");
+    });
+    it("should remove leading slashes", async () => {
+      const path = sanitizePath("/files/script.cgi");
+      assert.strictEqual(path, "files/script.cgi");
     });
   });
   describe("getExecPath", () => {
