@@ -81,6 +81,10 @@ script.cgi`);
       const path = sanitizePath("/files/script.cgi");
       assert.strictEqual(path, "files/script.cgi");
     });
+    it("should remove leading backslashes", async () => {
+      const path = sanitizePath("\\files\\script.cgi");
+      assert.strictEqual(path, "files\\script.cgi");
+    });
   });
   describe("getExecPath", () => {
     it("should return an execPath", async () => {
