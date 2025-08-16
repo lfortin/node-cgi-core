@@ -30,7 +30,7 @@ const callback = createHandler({
   urlPath: "/cgi-bin",
   filePath: "./cgi-bin",
   extensions: {
-    "/usr/bin/perl -w": ["pl", "cgi"],
+    "/usr/bin/perl": ["pl", "cgi"],
     "/usr/bin/python": ["py"],
     "/usr/bin/ruby": ["rb"],
     "/bin/bash": ["sh"],
