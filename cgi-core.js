@@ -35,6 +35,7 @@ const {
   streamResponsePayload,
 } = require("./lib/wrapper");
 const {
+  IS_WINDOWS,
   DEFAULT_EXTENSIONS,
   DEFAULT_CONFIG,
   NUMERIC_CONFIG_KEYS,
@@ -148,7 +149,7 @@ function spawnProcess(params) {
   // If not, assume fullFilePath is executable (script with shebang or binary)
   const cgiProcess = spawn(exec, args, {
     env,
-    shell: false,
+    shell: IS_WINDOWS,
     windowsHide: true,
     maxBuffer: config.maxBuffer,
     signal: ac.signal,
