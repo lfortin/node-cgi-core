@@ -82,7 +82,6 @@ function createHandler(configOptions = {}) {
 
     const fullFilePath = resolve(config.filePath, filePath);
     const execPath = getExecPath(filePath, config.extensions);
-    const fullExecPath = `${execPath ? execPath + " " : ""}${fullFilePath}`;
     let env;
 
     try {
@@ -116,7 +115,8 @@ function createHandler(configOptions = {}) {
     }
 
     const { cgiProcess, ac, timeoutId } = spawnProcess({
-      fullExecPath,
+      execPath,
+      fullFilePath,
       env,
       config,
       req,
@@ -137,13 +137,18 @@ function createHandler(configOptions = {}) {
 }
 
 function spawnProcess(params) {
-  const { fullExecPath, env, config, req, res } = params;
+  const { execPath, fullFilePath, env, config, req, res } = params;
 
   const ac = new AbortController();
 
-  const cgiProcess = spawn(fullExecPath, {
+  const exec = execPath || fullFilePath;
+  const args = execPath ? [fullFilePath] : [];
+
+  // If execPath is provided, use it as interpreter (e.g., /usr/bin/perl), passing fullFilePath as argument
+  // If not, assume fullFilePath is executable (script with shebang or binary)
+  const cgiProcess = spawn(exec, args, {
     env,
-    shell: true,
+    shell: false,
     windowsHide: true,
     maxBuffer: config.maxBuffer,
     signal: ac.signal,
