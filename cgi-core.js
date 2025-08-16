@@ -106,7 +106,7 @@ function createHandler(configOptions = {}) {
         return true;
       }
       if (err.code === "EACCES") {
-        const message = "File is not executable.";
+        const message = `${fullFilePath} is not executable.`;
         errorHandler.apply({ req, res, config }, [message]);
         return true;
       }
