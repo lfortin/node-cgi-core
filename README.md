@@ -113,6 +113,7 @@ Default:
   "node": ["js", "node"]
 }
 ```
+> **Note:** On Windows, using an **absolute path** for the interpreter (e.g., `C:\Program Files\Perl\perl.exe`) is recommended for **better performance and reliability**. Relative paths (like `perl`) require shell resolution, which adds overhead and may fail in certain environments.
 
 ### indexExtension
 
