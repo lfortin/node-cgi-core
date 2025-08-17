@@ -9,6 +9,8 @@ const {
   HeaderError,
   splitOutput,
   getRequestLogger,
+  isAbsolutePosixPath,
+  isAbsoluteWindowsPath,
 } = require("../lib/util");
 const { version } = require("../package.json");
 
@@ -327,6 +329,26 @@ script.cgi`);
         log,
         "GET /cgi-bin/script.cgi?param1=test&param2=test : 200"
       );
+    });
+  });
+  describe("isAbsolutePosixPath", () => {
+    it("should return true", async () => {
+      assert.strictEqual(isAbsolutePosixPath("/usr/bin/perl"), true);
+    });
+    it("should return false", async () => {
+      assert.strictEqual(isAbsolutePosixPath("perl"), false);
+      assert.strictEqual(isAbsolutePosixPath("usr/bin/perl"), false);
+    });
+  });
+  describe("isAbsoluteWindowsPath", () => {
+    it("should return true", async () => {
+      assert.strictEqual(isAbsoluteWindowsPath("C:\\Program Files\\perl"), true);
+      assert.strictEqual(isAbsoluteWindowsPath("C:/Program Files/perl"), true);
+      assert.strictEqual(isAbsoluteWindowsPath("\\\\volume\\perl"), true);
+    });
+    it("should return false", async () => {
+      assert.strictEqual(isAbsoluteWindowsPath("perl"), false);
+      assert.strictEqual(isAbsoluteWindowsPath("Program Files\\perl"), false);
     });
   });
 });
