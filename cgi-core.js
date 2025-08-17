@@ -27,7 +27,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const { resolve } = require("node:path");
 const { access, constants } = require("node:fs/promises");
 const { spawn } = require("node:child_process");
-const { getUrlFilePath, getExecPath, createEnvObject } = require("./lib/util");
+const {
+  getUrlFilePath,
+  getExecPath,
+  createEnvObject,
+  isAbsolutePath,
+} = require("./lib/util");
 const {
   errorHandler,
   terminateRequest,
@@ -35,7 +40,6 @@ const {
   streamResponsePayload,
 } = require("./lib/wrapper");
 const {
-  IS_WINDOWS,
   DEFAULT_EXTENSIONS,
   DEFAULT_CONFIG,
   NUMERIC_CONFIG_KEYS,
@@ -66,6 +70,11 @@ function createHandler(configOptions = {}) {
       `responseChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`
     );
   }
+
+  const absolutePaths = {};
+  Object.keys(config.extensions).forEach((execPath) => {
+    absolutePaths[execPath] = isAbsolutePath(execPath);
+  });
 
   return async function (req, res) {
     const filePath = getUrlFilePath(req.url, config);
@@ -122,6 +131,7 @@ function createHandler(configOptions = {}) {
       config,
       req,
       res,
+      useShell: execPath ? !absolutePaths[execPath] : false,
     });
 
     await streamRequestPayload(cgiProcess, req, config);
@@ -138,7 +148,7 @@ function createHandler(configOptions = {}) {
 }
 
 function spawnProcess(params) {
-  const { execPath, fullFilePath, env, config, req, res } = params;
+  const { execPath, fullFilePath, env, config, req, res, useShell } = params;
 
   const ac = new AbortController();
 
@@ -149,7 +159,7 @@ function spawnProcess(params) {
   // If not, assume fullFilePath is executable (script with shebang or binary)
   const cgiProcess = spawn(exec, args, {
     env,
-    shell: IS_WINDOWS,
+    shell: useShell,
     windowsHide: true,
     maxBuffer: config.maxBuffer,
     signal: ac.signal,
