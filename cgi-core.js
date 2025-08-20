@@ -184,6 +184,12 @@ function spawnProcess(params) {
   });
   cgiProcess.on("error", (error) => {
     clearTimeout(timeoutId);
+
+    if (error.code === "ENOENT") {
+      // here, we can safely assume it's an invalid interpreter path
+      const message = `Interpreter path not found: ${error.path}`;
+      errorHandler.apply({ req, res, config }, [message]);
+    }
   });
   cgiProcess.stderr.on("data", errorHandler.bind({ req, res, config }));
 
