@@ -41,6 +41,7 @@ export interface Config {
   requestTimeout: number;
   forceKillDelay: number;
   requireExecBit: boolean;
+  trustProxy: boolean;
   statusPages: StatusPages;
   env: EnvVars | EnvUpdaterFunction;
 }

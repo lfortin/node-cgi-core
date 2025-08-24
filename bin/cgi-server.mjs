@@ -68,6 +68,9 @@ const options = {
     type: "boolean",
     short: "l",
   },
+  trustProxy: {
+    type: "boolean",
+  },
   port: {
     type: "string",
     short: "p",
@@ -91,16 +94,20 @@ if (values.help) {
 
   -h, --help                    Display help
   -v, --version                 Display cgi-core version string
+
   --urlPath <urlPath>           Set base url path for routing
   --filePath <filePath>         Set file path where the CGI scripts are located
+  -p, --port <port>             Set the port to listen on
+
   --indexExtension <extension>  Set file extension to lookup for index files
   --maxBuffer <bytes>           Set the allowed HTTP request and response payloads size in bytes
   --requestChunkSize <bytes>    Set the HTTP request payload data chunks size in bytes
   --responseChunkSize <bytes>   Set the HTTP response payload data chunks size in bytes
   --requestTimeout <ms>         Set the HTTP request timeout delay in milliseconds
+  --trustProxy                  Trust proxy headers (X-Forwarded-For, etc.)
+
   -d, --debugOutput             Output errors for HTTP status 500
   -l, --logRequests             Log HTTP requests to STDOUT
-  -p, --port <port>             Set the port to listen on
     `);
   process.exit();
 }

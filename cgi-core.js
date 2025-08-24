@@ -109,6 +109,7 @@ function createHandler(configOptions = {}) {
         filePath,
         fullFilePath,
         env: config.env,
+        trustProxy: config.trustProxy,
       });
     } catch (err) {
       if (err.code === "ENOENT") {

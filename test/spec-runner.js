@@ -103,15 +103,18 @@ script.cgi`);
       const req = {
         url: "/cgi-bin/script.cgi/extra/path?param1=test&param2=test",
         socket: {
-          remoteAddress: "127.0.0.1",
+          remoteAddress: "100.100.100.100",
           localAddress: "127.0.0.1",
-          localPort: 3001,
+          localPort: "3001",
         },
         headers: {
           "content-type": "application/json",
           "content-length": 1024,
           cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
           authorization: "Bearer [token]",
+          "x-forwarded-for": "200.200.200.200",
+          "x-forwarded-proto": "https",
+          host: "www.example.org:3002",
         },
         method: "GET",
         httpVersion: "1.1",
@@ -121,6 +124,7 @@ script.cgi`);
         filePath: "files/script.cgi",
         fullFilePath: "/home/username/cgi-bin/files/script.cgi",
         env: { ANOTHER_VAR: "another value" },
+        trustProxy: false,
       };
       let env = createEnvObject(req, extraInfo);
 
@@ -149,28 +153,55 @@ script.cgi`);
         env.SCRIPT_FILENAME,
         "/home/username/cgi-bin/files/script.cgi"
       );
-      assert.strictEqual(env.REMOTE_ADDR, "127.0.0.1");
-      assert.strictEqual(env.SERVER_PORT, 3001);
+      assert.strictEqual(env.HTTP_HOST, "www.example.org:3002");
+      assert.strictEqual(env.REMOTE_ADDR, "100.100.100.100");
+      assert.strictEqual(env.SERVER_PORT, "3001");
       assert.strictEqual(env.SERVER_NAME, "127.0.0.1");
+      assert.notStrictEqual(env.HTTPS, "on");
       assert.strictEqual(env.AUTH_TYPE, "Bearer");
       assert.strictEqual(env.SCRIPT_NAME, "/files/script.cgi");
       assert.strictEqual(env.ANOTHER_VAR, "another value");
 
-      extraInfo.env = function (env, req) {
-        return {
-          UNIQUE_ID: req.uniqueId,
-        };
-      };
-      req.headers["x-forwarded-for"] = "127.0.0.1";
-      req.headers["x-forwarded-proto"] = "https";
-      req.headers["host"] = "www.example.org:3001";
-      env = createEnvObject(req, extraInfo);
-      assert.strictEqual(env.HTTP_HOST, "www.example.org:3001");
-      assert.strictEqual(env.REMOTE_ADDR, "127.0.0.1");
-      assert.strictEqual(env.SERVER_PORT, 3001);
+      env = createEnvObject(
+        req,
+        Object.assign({}, extraInfo, {
+          trustProxy: true,
+          env: function (env, req) {
+            return {
+              UNIQUE_ID: req.uniqueId,
+            };
+          },
+        })
+      );
+
+      assert.strictEqual(env.REMOTE_ADDR, "200.200.200.200");
+      assert.strictEqual(env.SERVER_PORT, "3002");
       assert.strictEqual(env.SERVER_NAME, "www.example.org");
       assert.strictEqual(env.HTTPS, "on");
       assert.strictEqual(env.UNIQUE_ID, req.uniqueId);
+    });
+    it("should fall back gracefully without host or proxy headers", async () => {
+      const req = {
+        url: "/cgi-bin/test.cgi",
+        method: "GET",
+        httpVersion: "1.1",
+        headers: {},
+        socket: {
+          localAddress: "127.0.0.1",
+          localPort: "8080",
+          remoteAddress: "192.168.1.10",
+        },
+      };
+      const extraInfo = {
+        filePath: "test.cgi",
+        fullFilePath: "/var/www/cgi-bin/test.cgi",
+        trustProxy: true,
+      };
+
+      const env = createEnvObject(req, extraInfo);
+      assert.strictEqual(env.SERVER_NAME, "127.0.0.1");
+      assert.strictEqual(env.SERVER_PORT, "8080");
+      assert.strictEqual(env.REMOTE_ADDR, "192.168.1.10");
     });
   });
   describe("parseResponse", () => {
@@ -342,7 +373,10 @@ script.cgi`);
   });
   describe("isAbsoluteWindowsPath", () => {
     it("should return true", async () => {
-      assert.strictEqual(isAbsoluteWindowsPath("C:\\Program Files\\perl"), true);
+      assert.strictEqual(
+        isAbsoluteWindowsPath("C:\\Program Files\\perl"),
+        true
+      );
       assert.strictEqual(isAbsoluteWindowsPath("C:/Program Files/perl"), true);
       assert.strictEqual(isAbsoluteWindowsPath("\\\\volume\\perl"), true);
     });

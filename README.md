@@ -190,6 +190,18 @@ An updater function can also be passed to the `env` option to update the environ
 }
 ```
 
+### trustProxy
+
+Set to `true` to trust proxy-related HTTP headers (`X-Forwarded-For`, `X-Forwarded-Proto`, and `Host`). This affects CGI environment variables such as:
+
+- `REMOTE_ADDR` — will use the leftmost IP in `X-Forwarded-For`
+- `HTTPS` — will be `"on"` if `X-Forwarded-Proto` is `"https"`
+- `SERVER_NAME` and `SERVER_PORT` — will be parsed from the `Host` header
+
+Default: `false`
+
+> ⚠️ **Important:** Only enable this if you are **running behind a trusted reverse proxy** (like Nginx or a load balancer). Enabling `trustProxy` when exposed to the public internet can allow **header spoofing** by clients.
+
 # Start a CGI Server from the Command Line
 
 The command `cgi-server` can be used to run an HTTP server to serve CGI scripts.
@@ -302,20 +314,6 @@ http {
   }
 }
 ```
-
-### ⚠️ Note on Proxy Headers and CGI Environment Variables
-
-If you run `cgi-core` behind a reverse proxy (such as **Nginx**), certain CGI environment variables may be influenced by proxy headers, including:
-
-- `REMOTE_ADDR` — may reflect the proxy's IP unless `X-Forwarded-For` is set
-- `HTTPS` — determined by `X-Forwarded-Proto` if TLS is terminated at the proxy
-- `SERVER_NAME` — usually derived from the `Host` header sent by the proxy
-
-By default, `cgi-core` **does not validate proxy headers**. If untrusted clients can set headers like `X-Forwarded-For`, this could result in spoofed values being passed to your CGI scripts.
-
-🔐 **Important**: Make sure your reverse proxy is properly configured and only accepts requests from trusted sources. If needed, filter or overwrite proxy headers before they reach your Node.js server.
-
-_You may choose to implement your own logic for handling trusted proxies or wait for future support of a `trustProxy` option._
 
 # License
 
