@@ -272,6 +272,8 @@ Below is an example Nginx configuration that:
 - Enables **caching** for `GET` responses
 - Serves static assets directly from the filesystem with browser caching
 
+> ⚠️ **Disclaimer**: This nginx.conf is intended for **local testing only**, not production use. The `$host` variable reflects client input and may be untrusted. When proxying to a local backend, always use a static `Host` value to avoid security issues like header spoofing or cache poisoning.
+
 ```nginx
 worker_processes 1;
 
