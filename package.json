@@ -2,10 +2,13 @@
   "name": "cgi-core",
   "description": "Lightweight, zero-dependency middleware for hosting CGI scripts with HTTP/1.1 support",
   "version": "1.2.1",
-  "homepage": "https://github.com/lfortin/node-cgi-core#readme",
+  "homepage": "https://lfortin.github.io/cgi-core",
   "repository": {
     "type": "git",
     "url": "git://github.com/lfortin/node-cgi-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lfortin/node-cgi-core/issues"
   },
   "author": {
     "name": "Laurent Fortin",
