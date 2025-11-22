@@ -40,6 +40,18 @@ describe("HTTP response status", () => {
       expect(response.body).to.equal("Not Found");
     });
   });
+  it("should get status 413 Entity Too Large", () => {
+    const bigPayload = "A".repeat(3 * 1024 * 1024); // 3 MB payload
+
+    cy.request({
+      url: "/cgi-bin/env.js",
+      method: "POST",
+      body: bigPayload,
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.equal(413);
+    });
+  });
   it("should get status 500 Internal Server Error", () => {
     cy.request({
       url: "/cgi-bin/error.js",
@@ -54,6 +66,14 @@ describe("HTTP response status", () => {
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.equal(200);
+    });
+  });
+  it("should get status 504 Gateway Timeout", () => {
+    cy.request({
+      url: "/cgi-bin/timeout.js",
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.equal(504);
     });
   });
 });

@@ -39,10 +39,10 @@ const callback = createHandler({
   indexExtension: "cgi",
   debugOutput: true,
   logRequests: true,
-  maxBuffer: 4 * 1024 ** 2,
+  maxBuffer: 1024 ** 2, // 1MB
   requestChunkSize: 4 * 1024,
   responseChunkSize: 4 * 1024,
-  requestTimeout: 30000,
+  requestTimeout: 3000, // 3s
   env: (env, req) => {
     return {
       REMOTE_AGENT: req.headers["user-agent"],
