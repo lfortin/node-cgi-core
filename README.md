@@ -48,7 +48,7 @@ Then, start a CGI server:
 npx cgi-server --filePath ./cgi-bin
 ```
 
-# Basic Usage
+## Basic Usage
 
 Here’s an example of how to set up a CGI server with `cgi-core`:
 
@@ -83,15 +83,15 @@ app.listen(3000);
 
 Usage example using [Express](https://github.com/lfortin/node-cgi-core/blob/master/docs/express.md).
 
-# Configuration options
+## Configuration options
 
 ### urlPath
 
-Base url for routing. Default: '/cgi-bin'
+Base url for routing. Default: `'/cgi-bin'`
 
 ### filePath
 
-File path where the CGI scripts are located. It is strongly advised to set a value for `filePath` (example: './cgi-bin'). Default: `process.cwd()`
+File path where the CGI scripts are located. It is strongly advised to set a value for `filePath` (example: `'./cgi-bin'`). Default: `process.cwd()`
 
 ### extensions
 
@@ -117,7 +117,7 @@ Default:
 
 ### indexExtension
 
-File extension to lookup for an index CGI script in any given directory. Default: 'js'
+File extension to lookup for an index CGI script in any given directory. Default: `'js'`
 
 ### debugOutput
 
@@ -202,7 +202,7 @@ Default: `false`
 
 > ⚠️ **Important:** Only enable this if you are **running behind a trusted reverse proxy** (like Nginx or a load balancer). Enabling `trustProxy` when exposed to the public internet can allow **header spoofing** by clients.
 
-# Start a CGI Server from the Command Line
+## Start a CGI Server from the Command Line
 
 The command `cgi-server` can be used to run an HTTP server to serve CGI scripts.
 
@@ -231,7 +231,7 @@ npx cgi-server --port 3001 --urlPath /cgi-bin --filePath ./cgi-bin
   -l, --logRequests             Log HTTP requests to STDOUT
 ```
 
-# Supported CGI environment variables
+## Supported CGI environment variables
 
 In addition to the standard HTTP-related variables, the following CGI environment variables are supported:
 
@@ -255,7 +255,7 @@ SERVER_PROTOCOL
 SERVER_SOFTWARE
 ```
 
-# 🔁 Using a Reverse Proxy (e.g., Nginx)
+## 🔁 Using a Reverse Proxy (e.g., Nginx)
 
 While `cgi-core` is capable of serving CGI scripts directly over HTTP/1.1, it's often recommended to use a **reverse proxy** like **Nginx** in front of your Node.js server for:
 
@@ -268,7 +268,7 @@ While `cgi-core` is capable of serving CGI scripts directly over HTTP/1.1, it's 
 
 Below is an example Nginx configuration that:
 
-- Proxies `/cgi-bin` requests to the Node.js/`cgi-core` server running on `localhost:3001`
+- Proxies `/cgi-bin` requests to the Node.js/cgi-core server running on `localhost:3001`
 - Enables **caching** for `GET` responses
 - Serves static assets directly from the filesystem with browser caching
 
@@ -321,7 +321,7 @@ http {
 }
 ```
 
-# License
+## License
 
 `cgi-core` is released under the [MIT License](https://github.com/lfortin/node-cgi-core/blob/master/LICENSE).
 
