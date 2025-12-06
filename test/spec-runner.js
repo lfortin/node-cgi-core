@@ -12,6 +12,7 @@ const {
   isAbsolutePosixPath,
   isAbsoluteWindowsPath,
 } = require("../lib/util");
+const { IS_WINDOWS } = require("../lib/constants");
 const { version } = require("../package.json");
 
 const config = {
@@ -120,12 +121,24 @@ script.cgi`);
         httpVersion: "1.1",
         uniqueId: randomUUID(),
       };
-      const extraInfo = {
-        filePath: "files/script.cgi",
-        fullFilePath: "/home/username/cgi-bin/files/script.cgi",
-        env: { ANOTHER_VAR: "another value" },
-        trustProxy: false,
-      };
+      let extraInfo;
+
+      if (IS_WINDOWS) {
+        extraInfo = {
+          filePath: "files/script.cgi",
+          fullFilePath: "C:\\Users\\username\\cgi-bin\\files\\script.cgi",
+          env: { ANOTHER_VAR: "another value" },
+          trustProxy: false,
+        };
+      } else {
+        extraInfo = {
+          filePath: "files/script.cgi",
+          fullFilePath: "/home/username/cgi-bin/files/script.cgi",
+          env: { ANOTHER_VAR: "another value" },
+          trustProxy: false,
+        };
+      }
+
       let env = createEnvObject(req, extraInfo);
 
       assert.strictEqual(env.HTTP_CONTENT_TYPE, "application/json");
@@ -149,10 +162,19 @@ script.cgi`);
         env.SERVER_SOFTWARE,
         `Node.js/${process.version} (cgi-core/v${version})`
       );
-      assert.strictEqual(
-        env.SCRIPT_FILENAME,
-        "/home/username/cgi-bin/files/script.cgi"
-      );
+
+      if (IS_WINDOWS) {
+        assert.strictEqual(
+          env.SCRIPT_FILENAME,
+          "C:\\Users\\username\\cgi-bin\\files\\script.cgi"
+        );
+      } else {
+        assert.strictEqual(
+          env.SCRIPT_FILENAME,
+          "/home/username/cgi-bin/files/script.cgi"
+        );
+      }
+
       assert.strictEqual(env.HTTP_HOST, "www.example.org:3002");
       assert.strictEqual(env.REMOTE_ADDR, "100.100.100.100");
       assert.strictEqual(env.SERVER_PORT, "3001");
