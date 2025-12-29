@@ -41,7 +41,7 @@ describe("HTTP response status", () => {
     });
   });
   it("should get status 413 Entity Too Large", () => {
-    const bigPayload = "A".repeat(102401); // 2 KB  + 1 byte payload
+    const bigPayload = "A".repeat(102401);
 
     cy.request({
       url: "/cgi-bin/env.js",
