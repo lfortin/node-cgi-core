@@ -51,24 +51,26 @@ const callback = createHandler({
   },
 });
 
-const pems = selfsigned.generate(
-  [{ name: "example cert", value: "example.com", type: "commonName" }],
+const pemsPromise = selfsigned.generate(
+  [{ name: "commonName", value: "localhost" }],
   { days: 365 }
 );
-const options = {
-  cert: pems.cert,
-  key: pems.private,
-};
 
-const app = createServer(options, async (req, res) => {
-  const requestHandled = await callback(req, res);
+pemsPromise.then((pems) => {
+  const options = {
+    cert: pems.cert,
+    key: pems.private,
+  };
+  const app = createServer(options, async (req, res) => {
+    const requestHandled = await callback(req, res);
 
-  if (!requestHandled) {
-    // here, handle any routing outside of urlPath
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.end("<html><body>outside of url path /cgi-bin</body></html>");
-  }
-});
-app.listen(port, () => {
-  console.log(`go to https://127.0.0.1:${port}/cgi-bin/env.js ;)`);
+    if (!requestHandled) {
+      // here, handle any routing outside of urlPath
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end("<html><body>outside of url path /cgi-bin</body></html>");
+    }
+  });
+  app.listen(port, () => {
+    console.log(`go to https://127.0.0.1:${port}/cgi-bin/env.js ;)`);
+  });
 });
