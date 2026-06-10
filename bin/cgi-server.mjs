@@ -25,7 +25,11 @@ import { createServer } from "node:http";
 import { parseArgs } from "node:util";
 import { randomUUID } from "node:crypto";
 import { createRequire } from "node:module";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { createHandler, defaultConfig } from "../cgi-core.mjs";
+
+const DEFAULT_CONFIG_FILE = "cgi-core.config.json";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../package.json");
@@ -78,14 +82,48 @@ const options = {
   teapot: {
     type: "boolean",
   },
+  config: {
+    type: "string",
+    short: "c",
+  },
 };
+
+function loadConfigFile(configPath, required) {
+  let content;
+  try {
+    content = readFileSync(configPath, "utf8");
+  } catch (err) {
+    if (err.code === "ENOENT") {
+      if (required) {
+        throw new Error(`Config file not found: ${configPath}`);
+      }
+      return {};
+    }
+    throw err;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(content);
+  } catch (err) {
+    throw new Error(
+      `Invalid JSON in config file ${configPath}: ${err.message}`,
+    );
+  }
+
+  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error(`Config file must contain a JSON object: ${configPath}`);
+  }
+
+  return parsed;
+}
 
 let values;
 try {
   ({ values } = parseArgs({ options }));
 } catch (err) {
-  console.log("invalid config");
-  process.exit();
+  console.error("invalid config");
+  process.exit(1);
 }
 
 if (values.help) {
@@ -94,6 +132,7 @@ if (values.help) {
 
   -h, --help                    Display help
   -v, --version                 Display cgi-core version string
+  -c, --config <file>           Load settings from a JSON config file
 
   --urlPath <urlPath>           Set base url path for routing
   --filePath <filePath>         Set file path where the CGI scripts are located
@@ -117,11 +156,42 @@ if (values.version) {
   process.exit();
 }
 
-const port = parseInt(values.port, 10) || 3001;
+let fileConfig;
+try {
+  if (values.config !== undefined) {
+    fileConfig = loadConfigFile(resolve(values.config), true);
+  } else {
+    fileConfig = loadConfigFile(
+      resolve(process.cwd(), DEFAULT_CONFIG_FILE),
+      false,
+    );
+  }
+} catch (err) {
+  console.error(err.message);
+  process.exit(1);
+}
+
+const { port: filePort, teapot: fileTeapot, ...fileHandlerConfig } = fileConfig;
+
+const cliHandlerConfig = Object.fromEntries(
+  Object.entries(values).filter(
+    ([key, value]) =>
+      value !== undefined &&
+      key !== "help" &&
+      key !== "version" &&
+      key !== "config" &&
+      key !== "port" &&
+      key !== "teapot",
+  ),
+);
+
+const port = parseInt(values.port ?? filePort, 10) || 3001;
+const teapot = values.teapot ?? fileTeapot ?? false;
 
 const config = {
   ...defaultConfig,
-  ...values,
+  ...fileHandlerConfig,
+  ...cliHandlerConfig,
   env: (env, req) => {
     return {
       REMOTE_AGENT: req.headers["user-agent"],
@@ -137,7 +207,7 @@ const app = createServer(async (req, res) => {
   if (!requestHandled) {
     // here, handle any routing outside of urlPath
 
-    if (config.teapot && req.url === "/teapot") {
+    if (teapot && req.url === "/teapot") {
       res.writeHead(418, { "Content-Type": "text/html" });
       res.end(`
         <html>

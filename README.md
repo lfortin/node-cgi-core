@@ -208,6 +208,11 @@ The command `cgi-server` can be used to run an HTTP server to serve CGI scripts.
 
 ```bash
 npx cgi-server --port 3001 --urlPath /cgi-bin --filePath ./cgi-bin
+
+# Calling cgi-server without flags will automatically look for 
+# cgi-core.config.json in the current directory, falling back 
+# to defaults if the file is not found.
+npx cgi-server
 ```
 
 ### Available arguments
@@ -215,6 +220,7 @@ npx cgi-server --port 3001 --urlPath /cgi-bin --filePath ./cgi-bin
 ```
   -h, --help                    Display help
   -v, --version                 Display cgi-core version string
+  -c, --config <file>           Load settings from a JSON config file
 
   --urlPath <urlPath>           Set base url path for routing
   --filePath <filePath>         Set file path where the CGI scripts are located
