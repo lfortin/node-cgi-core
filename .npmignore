@@ -7,6 +7,8 @@ coverage
 .DS_Store
 
 cgi-bin
+server
 images
+cgi-core.config.json
 Dockerfile
 nginx.conf

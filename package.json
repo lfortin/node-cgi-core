@@ -47,7 +47,7 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run --e2e --headless --browser electron",
     "prepublishOnly": "npm test && npm run cy:run",
-    "start": "nodemon --delay 1 server/http.mjs",
+    "start": "nodemon --delay 1 bin/cgi-server.mjs",
     "test": "mocha test/**/*.js"
   },
   "keywords": [

@@ -1,0 +1,19 @@
+{
+  "port": 3001,
+  "urlPath": "/cgi-bin",
+  "filePath": "./cgi-bin",
+  "extensions": {
+    "/usr/bin/perl": ["pl", "cgi"],
+    "/usr/bin/python": ["py"],
+    "/usr/bin/ruby": ["rb"],
+    "/bin/bash": ["sh"],
+    "/usr/local/bin/node": ["js", "node"]
+  },
+  "indexExtension": "cgi",
+  "debugOutput": true,
+  "logRequests": true,
+  "maxBuffer": 102400,
+  "requestChunkSize": 4096,
+  "responseChunkSize": 4096,
+  "requestTimeout": 1000
+}
