@@ -327,6 +327,13 @@ http {
 }
 ```
 
+## Notable releases
+
+v1.3.0 - `cgi-server`: Added JSON config file support (2026-??-??)
+v1.2.0 - Introduced `trustProxy` config option (2025-08-23)
+v1.1.0 - Added extra environment variables support (2025-07-27)
+v1.0.0 - First stable version (2025-06-28)
+
 ## License
 
 `cgi-core` is released under the [MIT License](https://github.com/lfortin/node-cgi-core/blob/master/LICENSE).
