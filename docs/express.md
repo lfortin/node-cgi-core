@@ -19,7 +19,7 @@ const config = {
 
 const app = express();
 
-app.all("/cgi-bin*", createHandler(config));
+app.all("/cgi-bin{*splat}", createHandler(config));
 
 app.use((req, res) => {
   res.type("html");
