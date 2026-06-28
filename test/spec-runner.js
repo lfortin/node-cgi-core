@@ -35,21 +35,21 @@ describe("cgi-core", () => {
     it("should return filePath", async () => {
       const filePath = getUrlFilePath(
         "http://test.com/cgi-bin/files/subfolder/script.cgi/path/info?test=1",
-        config
+        config,
       );
       assert.strictEqual(filePath, "files/subfolder/script.cgi");
     });
     it("should return filePath using indexExtension", async () => {
       const filePath = getUrlFilePath(
         "http://test.com/cgi-bin/files/subfolder",
-        config
+        config,
       );
       assert.strictEqual(filePath, "files/subfolder/index.js");
     });
     it("should return null if url not within urlPath range", async () => {
       const filePath = getUrlFilePath(
         "http://test.com/images/picture.jpg",
-        config
+        config,
       );
       assert.strictEqual(filePath, null);
     });
@@ -147,7 +147,7 @@ script.cgi`);
       assert.strictEqual(env.CONTENT_LENGTH, 1024);
       assert.strictEqual(
         env.HTTP_COOKIE,
-        "yummy_cookie=choco; tasty_cookie=strawberry"
+        "yummy_cookie=choco; tasty_cookie=strawberry",
       );
       assert.strictEqual(env.QUERY_STRING, "param1=test&param2=test");
       assert.strictEqual(env.REQUEST_METHOD, "GET");
@@ -155,23 +155,23 @@ script.cgi`);
       assert.strictEqual(env.PATH_INFO, "/extra/path");
       assert.strictEqual(
         env.REQUEST_URI,
-        "/cgi-bin/script.cgi/extra/path?param1=test&param2=test"
+        "/cgi-bin/script.cgi/extra/path?param1=test&param2=test",
       );
       assert.strictEqual(env.SERVER_PROTOCOL, "HTTP/1.1");
       assert.strictEqual(
         env.SERVER_SOFTWARE,
-        `Node.js/${process.version} (cgi-core/v${version})`
+        `Node.js/${process.version} (cgi-core/v${version})`,
       );
 
       if (IS_WINDOWS) {
         assert.strictEqual(
           env.SCRIPT_FILENAME,
-          "C:\\Users\\username\\cgi-bin\\files\\script.cgi"
+          "C:\\Users\\username\\cgi-bin\\files\\script.cgi",
         );
       } else {
         assert.strictEqual(
           env.SCRIPT_FILENAME,
-          "/home/username/cgi-bin/files/script.cgi"
+          "/home/username/cgi-bin/files/script.cgi",
         );
       }
 
@@ -193,7 +193,7 @@ script.cgi`);
               UNIQUE_ID: req.uniqueId,
             };
           },
-        })
+        }),
       );
 
       assert.strictEqual(env.REMOTE_ADDR, "200.200.200.200");
@@ -286,7 +286,7 @@ script.cgi`);
           assert.ok(err instanceof HeaderError);
           assert.match(err.message, /Missing end of headers line/);
           return true;
-        }
+        },
       );
     });
     it("should throw if invalid header", async () => {
@@ -308,14 +308,14 @@ script.cgi`);
           assert.match(err.message, /not supported header line/);
           assert.match(err.message, /Invalid_header/);
           return true;
-        }
+        },
       );
     });
   });
   describe("splitOutput", () => {
     it("should return 2 buffers using CRLFCRLF", async () => {
       const output = Buffer.from(
-        `Content-Type: text/plain\r\n\r\nhello world\r\n\r\nhello world`
+        `Content-Type: text/plain\r\n\r\nhello world\r\n\r\nhello world`,
       );
 
       const [first, second] = splitOutput(output);
@@ -324,7 +324,7 @@ script.cgi`);
     });
     it("should return 2 buffers using LFLF", async () => {
       const output = Buffer.from(
-        `Content-Type: text/plain\n\nhello world\n\nhello world`
+        `Content-Type: text/plain\n\nhello world\n\nhello world`,
       );
 
       const [first, second] = splitOutput(output);
@@ -347,9 +347,9 @@ script.cgi`);
       };
 
       const log = requestLogger(req, 200);
-      assert.strictEqual(
+      assert.match(
         log,
-        "GET /cgi-bin/script.cgi?param1=test&param2=test : 200"
+        /\[.+\] GET \/cgi-bin\/script\.cgi\?param1=test&param2=test : 200/,
       );
     });
     it("should not log twice the same request", async () => {
@@ -378,9 +378,9 @@ script.cgi`);
       }
 
       const log = requestLogger(req, 200);
-      assert.strictEqual(
+      assert.match(
         log,
-        "GET /cgi-bin/script.cgi?param1=test&param2=test : 200"
+        /\[.+\] GET \/cgi-bin\/script\.cgi\?param1=test&param2=test : 200/,
       );
     });
   });
@@ -397,7 +397,7 @@ script.cgi`);
     it("should return true", async () => {
       assert.strictEqual(
         isAbsoluteWindowsPath("C:\\Program Files\\perl"),
-        true
+        true,
       );
       assert.strictEqual(isAbsoluteWindowsPath("C:/Program Files/perl"), true);
       assert.strictEqual(isAbsoluteWindowsPath("\\\\volume\\perl"), true);
