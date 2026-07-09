@@ -24,15 +24,10 @@
 
 Object.defineProperty(exports, "__esModule", { value: true });
 
-const { resolve } = require("node:path");
+const { resolve, isAbsolute } = require("node:path");
 const { access, constants } = require("node:fs/promises");
 const { spawn } = require("node:child_process");
-const {
-  getUrlFilePath,
-  getExecPath,
-  createEnvObject,
-  isAbsolutePath,
-} = require("./lib/util");
+const { getUrlFilePath, getExecPath, createEnvObject } = require("./lib/util");
 const {
   errorHandler,
   terminateRequest,
@@ -73,7 +68,7 @@ function createHandler(configOptions = {}) {
 
   const absolutePaths = {};
   Object.keys(config.extensions).forEach((execPath) => {
-    absolutePaths[execPath] = isAbsolutePath(execPath);
+    absolutePaths[execPath] = isAbsolute(execPath);
   });
 
   return async function (req, res) {
@@ -85,11 +80,10 @@ function createHandler(configOptions = {}) {
 
     req.pause();
 
-    if (isAbsolutePath(filePath)) {
+    if (isAbsolute(filePath)) {
       terminateRequest(req, res, 400, config);
       return true;
     }
-
     if (parseInt(req.headers["content-length"], 10) > config.maxBuffer) {
       terminateRequest(req, res, 413, config);
       return true;
