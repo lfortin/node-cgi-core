@@ -62,12 +62,12 @@ function createHandler(configOptions = {}) {
 
   if (config.requestChunkSize > config.maxBuffer) {
     throw new Error(
-      `requestChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`
+      `requestChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`,
     );
   }
   if (config.responseChunkSize > config.maxBuffer) {
     throw new Error(
-      `responseChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`
+      `responseChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`,
     );
   }
 
@@ -84,6 +84,11 @@ function createHandler(configOptions = {}) {
     }
 
     req.pause();
+
+    if (isAbsolutePath(filePath)) {
+      terminateRequest(req, res, 400, config);
+      return true;
+    }
 
     if (parseInt(req.headers["content-length"], 10) > config.maxBuffer) {
       terminateRequest(req, res, 413, config);
