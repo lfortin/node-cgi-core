@@ -12,3 +12,7 @@ images
 cgi-core.config.json
 Dockerfile
 nginx.conf
+
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
