@@ -108,7 +108,7 @@ script.cgi`);
         },
         headers: {
           "content-type": "application/json",
-          "content-length": 1024,
+          "content-length": "1024",
           cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
           authorization: "Bearer [token]",
           "x-forwarded-for": "200.200.200.200",
@@ -140,9 +140,9 @@ script.cgi`);
       let env = createEnvObject(req, extraInfo);
 
       assert.strictEqual(env.HTTP_CONTENT_TYPE, "application/json");
-      assert.strictEqual(env.HTTP_CONTENT_LENGTH, 1024);
+      assert.strictEqual(env.HTTP_CONTENT_LENGTH, "1024");
       assert.strictEqual(env.CONTENT_TYPE, "application/json");
-      assert.strictEqual(env.CONTENT_LENGTH, 1024);
+      assert.strictEqual(env.CONTENT_LENGTH, "1024");
       assert.strictEqual(
         env.HTTP_COOKIE,
         "yummy_cookie=choco; tasty_cookie=strawberry",
