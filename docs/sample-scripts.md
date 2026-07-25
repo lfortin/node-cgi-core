@@ -2,6 +2,8 @@
 
 Here are some sample Perl scripts to try with `cgi-core`.
 
+> ⚠️ **Disclaimer**: These script examples are intentionally minimal to demonstrate CGI concepts. They omit many security, input validation, and error-handling practices required for production use.
+
 ## Script 1: Display CGI Environment Variables
 This script generates an HTML page displaying all CGI environment variables available.
 
