@@ -134,7 +134,7 @@ function createHandler(configOptions = {}) {
       useShell: execPath ? !absolutePaths[execPath] : false,
     });
 
-    await streamRequestPayload(cgiProcess, req, config);
+    await streamRequestPayload(cgiProcess, req, res, config);
     streamResponsePayload(cgiProcess, req, res, config);
 
     res.on("close", () => {
