@@ -237,8 +237,8 @@ script.cgi`);
       `);
 
       const { headers, bodyContent, status } = await parseResponse(output);
-      assert.strictEqual(headers["Content-Type"], "text/html");
-      assert.strictEqual(headers["Set-Cookie"], "yummy_cookie=choco");
+      assert.strictEqual(headers["content-type"], "text/html");
+      assert.strictEqual(headers["set-cookie"], "yummy_cookie=choco");
       assert.ok(bodyContent.toString().match(/hello world/));
       assert.strictEqual(status, undefined);
     });
@@ -255,7 +255,7 @@ script.cgi`);
       `);
 
       ({ headers, bodyContent, status } = await parseResponse(output));
-      assert.strictEqual(headers["Content-Type"], "text/html");
+      assert.strictEqual(headers["content-type"], "text/html");
       assert.ok(bodyContent.toString().match(/forbidden/));
       assert.strictEqual(status, 403);
 
@@ -269,7 +269,7 @@ script.cgi`);
       `);
 
       ({ headers, bodyContent, status } = await parseResponse(output));
-      assert.strictEqual(headers["Content-Type"], "text/html");
+      assert.strictEqual(headers["content-type"], "text/html");
       assert.ok(bodyContent.toString().match(/forbidden/));
       assert.strictEqual(status, 403);
     });
