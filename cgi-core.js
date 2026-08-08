@@ -91,7 +91,7 @@ function createHandler(configOptions = {}) {
 
     const fullFilePath = resolve(config.filePath, filePath);
     const execPath = getExecPath(filePath, config.extensions);
-    let env;
+    let env, cgiProcess, ac, timeoutId;
 
     try {
       if (!filePath) {
@@ -110,12 +110,23 @@ function createHandler(configOptions = {}) {
         env: config.env,
         trustProxy: config.trustProxy,
       });
+
+      const result = spawnProcess({
+        execPath,
+        fullFilePath,
+        env,
+        config,
+        req,
+        res,
+        useShell: execPath ? !absolutePaths[execPath] : false,
+      });
+      ({ cgiProcess, ac, timeoutId } = result);
     } catch (err) {
       if (err.code === "ENOENT") {
         terminateRequest(req, res, 404, config);
         return true;
       }
-      if (err.code === "EACCES") {
+      if (err.code === "EACCES" || err.code === "EFTYPE") {
         const message = `${fullFilePath} is not executable.`;
         errorHandler.apply({ req, res, config }, [message]);
         return true;
@@ -124,21 +135,11 @@ function createHandler(configOptions = {}) {
       return true;
     }
 
-    const { cgiProcess, ac, timeoutId } = spawnProcess({
-      execPath,
-      fullFilePath,
-      env,
-      config,
-      req,
-      res,
-      useShell: execPath ? !absolutePaths[execPath] : false,
-    });
-
     await streamRequestPayload(cgiProcess, req, res, config);
     streamResponsePayload(cgiProcess, req, res, config);
 
     res.on("close", () => {
-      ac.abort();
+      ac?.abort();
       req.destroy();
       clearTimeout(timeoutId);
     });
