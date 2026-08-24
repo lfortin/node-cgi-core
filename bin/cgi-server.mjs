@@ -28,8 +28,7 @@ import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createHandler, defaultConfig } from "../cgi-core.mjs";
-
-const DEFAULT_CONFIG_FILE = "cgi-core.config.json";
+import { DEFAULT_CONFIG_FILE } from "../lib/constants.js";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../package.json");
