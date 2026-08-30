@@ -66,7 +66,7 @@ function createHandler(configOptions = {}) {
     );
   }
   if (config.requestTimeout < 0) {
-    throw new Error("Invalid number for requestTimeout");
+    throw new Error("requestTimeout must be equal or greater than 0");
   }
 
   const absolutePaths = {};
