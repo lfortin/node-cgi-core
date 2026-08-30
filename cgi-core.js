@@ -65,6 +65,9 @@ function createHandler(configOptions = {}) {
       `responseChunkSize cannot be greater than maxBuffer (${config.maxBuffer})`,
     );
   }
+  if (config.requestTimeout < 0) {
+    throw new Error("Invalid number for requestTimeout");
+  }
 
   const absolutePaths = {};
   Object.keys(config.extensions).forEach((execPath) => {
@@ -166,18 +169,21 @@ function spawnProcess(params) {
     signal: ac.signal,
   });
 
-  const timeoutId = setTimeout(() => {
-    ac.abort();
-    terminateRequest(req, res, 504, config);
+  let timeoutId;
+  if (config.requestTimeout > 0) {
+    timeoutId = setTimeout(() => {
+      ac.abort();
+      terminateRequest(req, res, 504, config);
 
-    const forceKillTimeoutId = setTimeout(() => {
-      cgiProcess.kill("SIGKILL");
-    }, config.forceKillDelay);
+      const forceKillTimeoutId = setTimeout(() => {
+        cgiProcess.kill("SIGKILL");
+      }, config.forceKillDelay);
 
-    cgiProcess.on("exit", () => {
-      clearTimeout(forceKillTimeoutId);
-    });
-  }, config.requestTimeout);
+      cgiProcess.on("exit", () => {
+        clearTimeout(forceKillTimeoutId);
+      });
+    }, config.requestTimeout);
+  }
 
   cgiProcess.on("close", (code) => {
     clearTimeout(timeoutId);
