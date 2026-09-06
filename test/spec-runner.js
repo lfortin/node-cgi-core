@@ -199,6 +199,46 @@ script.cgi`);
       assert.strictEqual(env.SERVER_NAME, "www.example.org");
       assert.strictEqual(env.HTTPS, "on");
       assert.strictEqual(env.UNIQUE_ID, req.uniqueId);
+
+      req.headers = {
+        "content-type": "application/json",
+        "content-length": "1024",
+        cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
+        authorization: "Bearer [token]",
+        "x-forwarded-for": "200.200.200.200",
+        "x-forwarded-proto": "https",
+        host: "192.168.1.10:8080",
+      };
+      env = createEnvObject(
+        req,
+        Object.assign({}, extraInfo, {
+          trustProxy: true,
+        }),
+      );
+
+      assert.strictEqual(env.SERVER_PORT, "8080");
+      assert.strictEqual(env.SERVER_NAME, "192.168.1.10");
+      assert.strictEqual(env.HTTPS, "on");
+
+      req.headers = {
+        "content-type": "application/json",
+        "content-length": "1024",
+        cookie: "yummy_cookie=choco; tasty_cookie=strawberry",
+        authorization: "Bearer [token]",
+        "x-forwarded-for": "200.200.200.200",
+        "x-forwarded-proto": "https",
+        host: "[fe80::1ff:fe23:4567:890a]:8080",
+      };
+      env = createEnvObject(
+        req,
+        Object.assign({}, extraInfo, {
+          trustProxy: true,
+        }),
+      );
+
+      assert.strictEqual(env.SERVER_PORT, "8080");
+      assert.strictEqual(env.SERVER_NAME, "fe80::1ff:fe23:4567:890a");
+      assert.strictEqual(env.HTTPS, "on");
     });
     it("should fall back gracefully without host or proxy headers", async () => {
       const req = {
