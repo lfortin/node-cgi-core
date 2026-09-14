@@ -103,8 +103,9 @@ script.cgi`);
         url: "/cgi-bin/script.cgi/extra/path?param1=test&param2=test",
         socket: {
           remoteAddress: "100.100.100.100",
+          remotePort: 80,
           localAddress: "127.0.0.1",
-          localPort: "3001",
+          localPort: 3001,
         },
         headers: {
           "content-type": "application/json",
@@ -175,6 +176,8 @@ script.cgi`);
 
       assert.strictEqual(env.HTTP_HOST, "www.example.org:3002");
       assert.strictEqual(env.REMOTE_ADDR, "100.100.100.100");
+      assert.strictEqual(env.REMOTE_HOST, "100.100.100.100");
+      assert.strictEqual(env.REMOTE_PORT, "80");
       assert.strictEqual(env.SERVER_PORT, "3001");
       assert.strictEqual(env.SERVER_NAME, "127.0.0.1");
       assert.notStrictEqual(env.HTTPS, "on");
