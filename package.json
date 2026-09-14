@@ -45,7 +45,7 @@
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text-summary mocha test/**/*.js",
     "cy:open": "cypress open",
-    "cy:run": "cypress run --e2e --headless --browser electron",
+    "cy:run": "cypress run --e2e --headless --browser chrome",
     "prepublishOnly": "npm test && npm run cy:run",
     "start": "nodemon --delay 1 bin/cgi-server.mjs",
     "test": "mocha test/**/*.js"
